@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>嘉義家族四日深度遊 - 旅遊決策沙盒</title>
+  <title>嘉義家族四日深度遊 - 旅遊決策沙盒 (導航優化版)</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -12,25 +12,19 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Chart.js for Trip Attribute Radar Chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'Microsoft JhengHei', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#f0f9ff',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-            }
+            sans: ['Noto Sans TC', 'Inter', 'sans-serif'],
           }
         }
       }
@@ -71,28 +65,41 @@
     }
   </style>
 </head>
-<body class="h-full flex flex-col font-sans overflow-hidden antialiased select-none">
+<body class="h-full flex flex-col font-sans overflow-hidden antialiased select-none bg-slate-900 text-slate-100">
 
   <!-- Top Navigation Header -->
-  <header class="h-16 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 flex items-center justify-between z-30 shrink-0">
-    <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
-        <i class="fa-solid fa-users-line text-lg"></i>
+  <header class="h-16 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 md:px-4 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center space-x-2 md:space-x-3">
+      <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/20 shrink-0">
+        <i class="fa-solid fa-users-line text-base md:text-lg"></i>
       </div>
       <div>
-        <h1 class="font-bold text-base md:text-lg text-white leading-tight flex items-center gap-2">
-          嘉義家族四日遊 <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">15人 4車客製版</span>
+        <h1 class="font-bold text-sm md:text-base text-white leading-tight flex items-center gap-1.5">
+          嘉義家族四日遊 <span class="text-[10px] md:text-xs font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">15人 4車導航版</span>
         </h1>
-        <p class="text-[11px] text-slate-400">2026/08/22 (六) - 08/25 (二) 決策沙盒</p>
+        <p class="text-[10px] md:text-[11px] text-slate-400">2026/08/22 (六) - 08/25 (二) 決策沙盒</p>
       </div>
     </div>
 
-    <!-- Right Controls: Itinerary Counter -->
-    <div class="flex items-center space-x-3">
-      <button id="btnOpenItinerary" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center space-x-2">
-        <i class="fa-solid fa-bookmark text-amber-400"></i>
-        <span class="hidden sm:inline">家族定案清單</span>
-        <span id="savedCountBadge" class="bg-amber-500 text-slate-950 font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center">0</span>
+    <!-- Right Controls: Tools & Itinerary Counter -->
+    <div class="flex items-center space-x-1.5 md:space-x-2">
+      <!-- Radar Chart Trigger -->
+      <button id="btnOpenRadar" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 md:px-3 md:py-2 rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center space-x-1" title="檢視行程節奏雷達圖">
+        <i class="fa-solid fa-chart-pie text-sky-400"></i>
+        <span class="hidden sm:inline">節奏分析</span>
+      </button>
+
+      <!-- Parking & Travel Tips Trigger -->
+      <button id="btnOpenTips" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 md:px-3 md:py-2 rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center space-x-1" title="自駕秘訣與心法">
+        <i class="fa-solid fa-car text-amber-400"></i>
+        <span class="hidden sm:inline">4車心法</span>
+      </button>
+
+      <!-- Saved Itinerary Button -->
+      <button id="btnOpenItinerary" class="relative bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1.5 md:px-3 md:py-2 rounded-xl text-xs font-bold shadow-lg shadow-amber-500/10 transition flex items-center space-x-1.5">
+        <i class="fa-solid fa-bookmark"></i>
+        <span class="hidden sm:inline">定案清單</span>
+        <span id="savedCountBadge" class="bg-slate-950 text-amber-400 font-extrabold text-[10px] w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center">0</span>
       </button>
     </div>
   </header>
@@ -108,7 +115,7 @@
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
           <input type="text" id="searchInput" placeholder="搜尋景點、美食或備案..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500 transition">
         </div>
-        <div class="flex space-x-1 overflow-x-auto pb-1 text-[11px]" id="categoryBar">
+        <div class="flex space-x-1 overflow-x-auto pb-1 text-[11px]" id="desktopCategoryBar">
           <button data-cat="all" class="cat-btn active bg-sky-600 text-white px-2.5 py-1 rounded-md font-medium whitespace-nowrap">全部 (11)</button>
           <button data-cat="DAY 1 海線" class="cat-btn bg-slate-800 text-slate-400 hover:bg-slate-700 px-2.5 py-1 rounded-md font-medium whitespace-nowrap">DAY1 海線</button>
           <button data-cat="DAY 2 美學" class="cat-btn bg-slate-800 text-slate-400 hover:bg-slate-700 px-2.5 py-1 rounded-md font-medium whitespace-nowrap">DAY2 美學</button>
@@ -128,7 +135,7 @@
     <div class="flex-1 relative bg-slate-950">
       <div id="map" class="w-full h-full z-10"></div>
 
-      <!-- Mobile Category Chips Float overlay -->
+      <!-- Mobile Category Chips Float overlay (SOLVED ISSUE 1) -->
       <div class="md:hidden absolute top-3 left-3 right-3 z-20 flex space-x-1.5 overflow-x-auto pb-1 bg-slate-900/90 backdrop-blur p-2 rounded-xl border border-slate-800/80 shadow-lg" id="mobileCategoryBar">
         <button data-cat="all" class="m-cat-btn active bg-sky-600 text-white px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap">全部</button>
         <button data-cat="DAY 1 海線" class="m-cat-btn bg-slate-800 text-slate-300 px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap">D1 海線</button>
@@ -138,10 +145,18 @@
         <button data-cat="備案專區" class="m-cat-btn bg-slate-800 text-slate-300 px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap">☔ 備案</button>
       </div>
 
-      <!-- Map Reset View Floating Button -->
-      <button id="btnResetMap" class="absolute bottom-6 right-6 z-20 bg-slate-900/90 text-slate-300 border border-slate-700 p-3 rounded-full shadow-xl hover:bg-slate-800 hover:text-white transition active:scale-95" title="全覽重設視角">
-        <i class="fa-solid fa-map-location-dot text-base"></i>
-      </button>
+      <!-- Quick Region Jump Controls (UI/UX Improvement for Taichung vs Chiayi) -->
+      <div class="absolute bottom-6 left-4 z-20 bg-slate-900/90 backdrop-blur p-1.5 rounded-xl border border-slate-800 shadow-xl flex items-center space-x-1 text-xs">
+        <button id="btnZoomOverview" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-medium transition">
+          <i class="fa-solid fa-globe text-sky-400 mr-1"></i>全覽
+        </button>
+        <button id="btnZoomTaichung" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded-lg font-medium transition">
+          <i class="fa-solid fa-location-arrow text-sky-400 mr-1"></i>台中區
+        </button>
+        <button id="btnZoomChiayi" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg font-medium transition">
+          <i class="fa-solid fa-location-arrow text-amber-400 mr-1"></i>嘉義區
+        </button>
+      </div>
     </div>
   </main>
 
@@ -178,6 +193,18 @@
         </div>
       </div>
 
+      <!-- Elders & Kids Highlight Badges (Referenced from index_v1) -->
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-blue-950/40 p-2.5 rounded-lg border border-blue-800/40">
+          <div class="text-blue-400 mb-0.5 font-bold"><i class="fa-solid fa-person-cane mr-1"></i>👴 長輩體驗</div>
+          <div id="drawerOldHighlight" class="text-slate-300 text-[11px]">舒適吹冷氣環境，無障礙好平坦</div>
+        </div>
+        <div class="bg-amber-950/40 p-2.5 rounded-lg border border-amber-800/40">
+          <div class="text-amber-400 mb-0.5 font-bold"><i class="fa-solid fa-child mr-1"></i>👶 小孩體驗</div>
+          <div id="drawerKidHighlight" class="text-slate-300 text-[11px]">巨型釣魚機互動放電</div>
+        </div>
+      </div>
+
       <!-- Quick Info Badges Grid -->
       <div class="grid grid-cols-2 gap-2 text-xs">
         <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
@@ -185,7 +212,7 @@
           <div id="drawerTransport" class="font-medium text-slate-200">國 4 接台 61 (附免費大平面停車場)</div>
         </div>
         <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-          <div class="text-slate-500 mb-0.5"><i class="fa-solid fa-cloud-sun text-amber-400 mr-1"></i>長輩小孩舒適度</div>
+          <div class="text-slate-500 mb-0.5"><i class="fa-solid fa-cloud-sun text-amber-400 mr-1"></i>氣候與舒適度</div>
           <div id="drawerWeatherSuit" class="font-medium text-slate-200">全冷氣室內館 (雨天首選)</div>
         </div>
       </div>
@@ -198,7 +225,7 @@
         </p>
       </div>
 
-      <!-- CRITICAL FEATURE: Scenario Backup Decision Box -->
+      <!-- Scenario Backup Decision Box -->
       <div id="backupDecisionBox" class="bg-gradient-to-br from-indigo-950/80 to-slate-900 border border-indigo-500/30 rounded-xl p-4 space-y-2.5 relative overflow-hidden">
         <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
         
@@ -229,11 +256,59 @@
         <i class="fa-solid fa-star"></i>
         <span id="btnSaveSpotText">納入家族定案清單</span>
       </button>
-      <a id="btnExternalMap" href="#" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl text-xs border border-slate-700 transition flex items-center justify-center" title="在 Google Maps 開啟">
-        <i class="fa-solid fa-map-location-dot text-base"></i>
+      <!-- Direct Navigation External Link (Referenced from index_v1) -->
+      <a id="btnExternalMap" href="#" target="_blank" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1" title="開啟 Google 地圖導航">
+        <i class="fa-solid fa-diamond-turn-right"></i>
+        <span>開啟導航 ↗</span>
       </a>
     </div>
 
+  </div>
+
+  <!-- Radar Chart Modal (Referenced from index_v1) -->
+  <div id="radarModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-sky-400"></i> 行程節奏與體驗分析
+        </h3>
+        <button id="btnCloseRadar" class="text-slate-400 hover:text-white w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="w-full h-64 relative">
+        <canvas id="tripChart"></canvas>
+      </div>
+      <p class="text-center text-xs text-slate-400">專為三代同堂設計：高舒適度、高室內佔比、100% 四車停車考量。</p>
+    </div>
+  </div>
+
+  <!-- 4-Car Parking & Travel Tips Modal (Referenced from index_v1) -->
+  <div id="tipsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i class="fa-solid fa-car text-amber-400"></i> 15人 4車 家族自駕與防曬心法
+        </h3>
+        <button id="btnCloseTips" class="text-slate-400 hover:text-white w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs text-slate-300">
+        <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+          <p class="font-bold text-amber-400 mb-1">💡 外帶應對停車魔王</p>
+          <p>熱門米糕店難一次停 4 台車，建議由年輕人代表開 1 台車去外帶，全員至附近的【清水鰲峰山公園】或車上舒適享用。</p>
+        </div>
+        <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+          <p class="font-bold text-amber-400 mb-1">☀️ 8月酷暑避暑策略</p>
+          <p>每日 14:00 - 16:00 平地高溫酷熱且易降雷雨，行程嚴守安排於全冷氣室內館（如故宮南院、佐登妮絲城堡內區）。</p>
+        </div>
+        <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+          <p class="font-bold text-amber-400 mb-1">🚗 最終日返程車潮避讓</p>
+          <p>Day 4 北返建議於 14:00 前結束台中行程啟程，可完勝新竹與桃園傍晚 17:00 開始的下班通勤塞車潮。</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Saved Itinerary Drawer Modal -->
@@ -287,6 +362,7 @@
         id: "spot_d1_1",
         name: "寶熊漁樂碼頭 (D1上午)",
         category: "DAY 1 海線",
+        region: "taichung",
         lat: 24.2158,
         lng: 120.7061,
         time: "2 小時",
@@ -295,6 +371,8 @@
         weatherSuit: "全冷氣室內館 (雨天避暑首選)",
         image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
         desc: "全台首座釣魚主題觀光工廠！二樓巨無霸釣魚機與 3D 海洋劇場，小朋友可以拿釣竿互動放電，長輩吹冷氣舒適了解海洋文化。午餐可安排外帶阿財/王塔米糕至鰲峰山公園享用。",
+        oldHighlight: "舒適吹冷氣環境，吸收海洋文化知識",
+        kidHighlight: "巨型釣魚機與 3D 海洋劇場互動",
         backupId: "spot_d1_2",
         backupName: "MITSUI OUTLET PARK 台中港 (午餐與摩天輪)",
         backupReason: "若想提早享受大空間美食街，可直接前往三井 Outlet，15 人停車與用餐完全零壓力。"
@@ -303,6 +381,7 @@
         id: "spot_d1_2",
         name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)",
         category: "DAY 1 海線",
+        region: "taichung",
         lat: 24.2555,
         lng: 120.5222,
         time: "3-4 小時",
@@ -311,6 +390,8 @@
         weatherSuit: "全室內商場與冷氣區域",
         image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
         desc: "舒適室內美食街、SNOWTOWN 雪樂地（恆溫冰雪場），16:00 太陽稍歇後可搭乘『台中之星』海景摩天輪。完全不怕下雨或高溫。",
+        oldHighlight: "海景咖啡座，平坦室內逛街採買",
+        kidHighlight: "貨櫃摩天輪與 SNOWTOWN 冰雪樂園",
         backupId: "spot_d1_3a",
         backupName: "高美濕地木棧道 (夕陽 Plan A)",
         backupReason: "天氣晴朗無大雨且風速適中時，傍晚 17:00 前往欣賞全台最美落日與巨大風車。"
@@ -319,6 +400,7 @@
         id: "spot_d1_3a",
         name: "高美濕地木棧道 (D1傍晚 Plan A)",
         category: "DAY 1 海線",
+        region: "taichung",
         lat: 24.3120,
         lng: 120.5492,
         time: "1.5 小時",
@@ -327,14 +409,17 @@
         weatherSuit: "晴朗微風夕陽最佳",
         image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
         desc: "【Plan A 夕陽線】8 月傍晚海風轉涼，平緩木棧道賞招潮蟹與落日大景。長輩可在入口咖啡廳遠眺。結束後可選梧棲來來海鮮，或直奔嘉義新北平阿榮師啤酒鴨（千坪停車場）。",
+        oldHighlight: "入口處景觀咖啡廳休息遠眺風車夕陽",
+        kidHighlight: "木棧道尋找招潮蟹與彈塗魚",
         backupId: "spot_d1_3b",
         backupName: "梧棲文化出張所 (雨天 Plan B)",
-        backupReason: "若午後對流降雨或海邊強風木棧道封閉，立即改去日式古蹟聚落，漫步體驗祈福繪馬。"
+        backupReason: "若午後對流降雨或海邊強風木棧道封閉，補充改去日式古蹟聚落，漫步體驗祈福繪馬。"
       },
       {
         id: "spot_d1_3b",
         name: "梧棲文化出張所 (D1傍晚 Plan B)",
         category: "備案專區",
+        region: "taichung",
         lat: 24.2548,
         lng: 120.5332,
         time: "1 小時",
@@ -343,6 +428,8 @@
         weatherSuit: "日式廊道遮蔭 (雨天備案)",
         image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80",
         desc: "【Plan B 日式老街線】日治時期官舍改建，京都感平坦園區，長輩走起來完全不累。18:00 前結束時間充裕，方便安排晚餐。",
+        oldHighlight: "平坦京都風廊道，長輩散步完全不累",
+        kidHighlight: "預訂祈福繪馬 DIY 體驗",
         backupId: "spot_d1_3a",
         backupName: "高美濕地木棧道 (夕陽 Plan A)",
         backupReason: "若天候轉好放晴，可隨時開車 15 分鐘轉往高美濕地看夕陽。"
@@ -351,6 +438,7 @@
         id: "spot_d2_1",
         name: "佐登妮絲城堡 (D2上午)",
         category: "DAY 2 美學",
+        region: "chiayi",
         lat: 23.6012,
         lng: 120.4705,
         time: "2.5 小時",
@@ -359,14 +447,17 @@
         weatherSuit: "華麗室內冷氣展廳 (戶外大理石較防曬)",
         image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80",
         desc: "高達 40 公尺歐式穹頂與巴洛克走廊！全區無障礙坡道，華麗室內吹冷氣逛香氛區。午餐可選樺榮海鮮（故宮旁）或太保黑皮巨無霸酥皮肉圓。",
+        oldHighlight: "室內冷氣逛香氛美學展區",
+        kidHighlight: "歐風巴洛克城堡公主拍照打卡",
         backupId: "spot_d2_2",
         backupName: "故宮南院 (兒童創意中心與展廳)",
-        backupReason: "若正景點陽光折射較熱，可提前移駕至故宮南院無障礙大廳吹冷氣。"
+        backupReason: "若景點陽光折射較熱，可提前移駕至故宮南院無障礙大廳吹冷氣。"
       },
       {
         id: "spot_d2_2",
         name: "國立故宮博物院南部院區 (D2下午)",
         category: "DAY 2 美學",
+        region: "chiayi",
         lat: 23.4711,
         lng: 120.2929,
         time: "3 小時",
@@ -375,6 +466,8 @@
         weatherSuit: "平地烈日與午後雷雨最佳解",
         image: "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?auto=format&fit=crop&w=600&q=80",
         desc: "8 月午後避暑絕佳場所！長輩看國寶展覽，小朋友在兒童創意中心體驗亞洲文化。傍晚漫步『至美橋』賞湖畔夕陽倒影。晚餐推薦朴子 168 熱炒或嘉義體育館海鮮碳烤。",
+        oldHighlight: "無障礙語音導覽，舒適欣賞翠玉白菜國寶",
+        kidHighlight: "超大兒童創意中心互動體驗與遊戲區",
         backupId: "spot_d2_1",
         backupName: "佐登妮絲城堡",
         backupReason: "早上下午行程可依當天車流彈性對調。"
@@ -383,6 +476,7 @@
         id: "spot_d3_1",
         name: "三隻小豬觀光農場 (D3上午)",
         category: "DAY 3 萌寵農創",
+        region: "chiayi",
         lat: 23.5358,
         lng: 120.4429,
         time: "2 小時",
@@ -391,6 +485,8 @@
         weatherSuit: "步道噴霧降溫與遮蔭涼亭",
         image: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
         desc: "週一照常營業！全平路超大萌寵樂園，入口粉紅豬可拍 15 人大合照。水豚、狐獴餵食體驗，沿線備有噴霧降溫與涼亭。午餐享用【正宗民雄鵝肉亭】(大型停車場)。",
+        oldHighlight: "噴霧降溫客棧與沿線休息涼亭",
+        kidHighlight: "水豚、狐獴可愛小動物餵食體驗",
         backupId: "spot_d3_2",
         backupName: "中埔穀倉農創園區",
         backupReason: "中午飯後經國道 3 號開車 15 分鐘直接前往中埔穀倉喝星巴克。"
@@ -399,6 +495,7 @@
         id: "spot_d3_2",
         name: "中埔穀倉農創園區 (D3下午)",
         category: "DAY 3 萌寵農創",
+        region: "chiayi",
         lat: 23.4501,
         lng: 120.4851,
         time: "2 小時",
@@ -407,6 +504,8 @@
         weatherSuit: "挑高老穀倉室內冷氣",
         image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80",
         desc: "全台唯一『稻草總部』星巴克！挑高老穀倉冷氣開放，長輩悠閒喝咖啡、逛在地農特產（黑木耳汁/鳳梨酥）。晚餐首選交流道旁【蔡大頭甕烤雞】（千坪停車場、皮脆肉嫩、附雞汁筍湯）。",
+        oldHighlight: "老穀倉悠閒喝咖啡與採買在地伴手禮",
+        kidHighlight: "穰穰直賣所古早味農具互動",
         backupId: "spot_d3_1",
         backupName: "三隻小豬觀光農場",
         backupReason: "若上午遇到雨勢，可先至中埔穀倉室內，下午雨停再回三隻小豬。"
@@ -415,6 +514,7 @@
         id: "spot_d4_1",
         name: "麗寶 OUTLET ＋ 木育森林 (D4 Plan A)",
         category: "DAY 4 北返中繼",
+        region: "taichung",
         lat: 24.3235,
         lng: 120.7001,
         time: "3 小時",
@@ -423,6 +523,8 @@
         weatherSuit: "全室內主題商場與樂園",
         image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80",
         desc: "【Plan A 后里線】Wooderful life 物理木造動腦樂園，小孩瘋狂放電、長輩舒適坐看。鐘樓星巴克美食街 15 人用餐方便，吃飽 1 分鐘上國道直奔北部！",
+        oldHighlight: "星巴克鐘樓區，坐看小孩體驗木樂園",
+        kidHighlight: "Wooderful life 木育森林物理闖關",
         backupId: "spot_d4_2",
         backupName: "國立自然科學博物館 (Plan B 知性恐龍)",
         backupReason: "想走經典知性路線，可切換至科博館生命科學廳看動態暴龍與第六市場。"
@@ -431,6 +533,7 @@
         id: "spot_d4_2",
         name: "國立自然科學博物館 (D4 Plan B)",
         category: "DAY 4 北返中繼",
+        region: "taichung",
         lat: 24.1573,
         lng: 120.6660,
         time: "2.5 小時",
@@ -439,6 +542,8 @@
         weatherSuit: "全區無障礙與超強冷氣",
         image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
         desc: "【Plan B 台中線】週二早上記人潮少，看巨型咆哮暴龍與大王烏賊。全區坡道推車方便。午餐可步行至金典綠園道 3 樓『第六市場』享受冷氣菜市場美食。",
+        oldHighlight: "無障礙坡道完善，冷氣涼爽知性看展",
+        kidHighlight: "生命科學廳會動會叫的巨型咆哮暴龍",
         backupId: "spot_d4_3",
         backupName: "中央公園遊客中心航廈 (Plan C 太空航廈)",
         backupReason: "若喜愛新穎科技風格，可前往中央公園沉浸式沉浸機艙拍 15 人高質感大合照。"
@@ -447,6 +552,7 @@
         id: "spot_d4_3",
         name: "中央公園遊客中心航廈 (D4 Plan C)",
         category: "備案專區",
+        region: "taichung",
         lat: 24.1843,
         lng: 120.6558,
         time: "1.5 小時",
@@ -455,6 +561,8 @@
         weatherSuit: "未來感太空艙冷氣廊道",
         image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80",
         desc: "【Plan C 水湳線】機場航廈與太空艙造型！免費實體客機座艙與 VR 飛航體驗，拍 15 人家族大合照極具質感。午餐可至水湳大一點或七期鼎泰豐/享鴨。",
+        oldHighlight: "質感白色廊道，家族大合照絕佳背景",
+        kidHighlight: "免費實體客機座艙與 VR 飛航體驗",
         backupId: "spot_d4_1",
         backupName: "麗寶 OUTLET PARK",
         backupReason: "結束航廈體驗後，可直奔后里麗寶 Outlet 享用美食街。"
@@ -467,6 +575,7 @@
     let savedSpotIds = JSON.parse(localStorage.getItem('chiayi_family_saved_spots') || '[]');
     let map = null;
     let markersMap = {};
+    let chartInstance = null;
 
     window.onload = function() {
       initMap();
@@ -481,20 +590,22 @@
         zoomControl: false
       }).setView([23.9500, 120.5500], 9.5);
 
-      // Voyager Tile Layer
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      // ISSUE 3 SOLVED: Standard OpenStreetMap Tiles providing Traditional Chinese Place Names in Taiwan
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 18
       }).addTo(map);
 
       // Custom Leaflet Markers
       MOCK_SPOTS.forEach(spot => {
         const isBackup = spot.category === '備案專區';
+        const isTaichung = spot.region === 'taichung';
+        
         const markerIcon = L.divIcon({
           className: 'custom-map-pin',
           html: `
             <div class="spot-pin transition-transform duration-200 hover:scale-125 cursor-pointer" data-id="${spot.id}">
-              <div class="w-8 h-8 rounded-full ${isBackup ? 'bg-purple-600' : 'bg-amber-500'} text-slate-950 flex items-center justify-center shadow-lg border-2 border-white text-xs font-bold">
+              <div class="w-8 h-8 rounded-full ${isBackup ? 'bg-purple-600' : (isTaichung ? 'bg-sky-500' : 'bg-amber-500')} text-slate-950 flex items-center justify-center shadow-lg border-2 border-white text-xs font-bold">
                 <i class="${isBackup ? 'fa-solid fa-umbrella' : 'fa-solid fa-location-dot'}"></i>
               </div>
             </div>
@@ -511,6 +622,51 @@
 
         markersMap[spot.id] = marker;
       });
+    }
+
+    // ISSUE 1 SOLVED: Unified Category Filtering for BOTH Desktop and Mobile
+    function setCategory(cat) {
+      currentCategory = cat;
+
+      // 1. Sync button visual states on both Desktop and Mobile
+      document.querySelectorAll('.cat-btn, .m-cat-btn').forEach(b => {
+        if (b.dataset.cat === cat) {
+          b.classList.add('active', 'bg-sky-600', 'text-white');
+          b.classList.remove('bg-slate-800', 'text-slate-400', 'text-slate-300');
+        } else {
+          b.classList.remove('active', 'bg-sky-600', 'text-white');
+          b.classList.add('bg-slate-800', 'text-slate-400');
+        }
+      });
+
+      // 2. Re-render desktop sidebar
+      renderSidebarSpots();
+
+      // 3. Filter map markers and auto-fit bounds on mobile/desktop
+      const visibleLatLngs = [];
+
+      MOCK_SPOTS.forEach(s => {
+        const matches = (currentCategory === 'all' || s.category === currentCategory);
+        const marker = markersMap[s.id];
+
+        if (marker) {
+          if (matches) {
+            if (!map.hasLayer(marker)) map.addLayer(marker);
+            visibleLatLngs.push([s.lat, s.lng]);
+          } else {
+            if (map.hasLayer(marker)) map.removeLayer(marker);
+          }
+        }
+      });
+
+      // Auto fit map view to filtered spots if any exist
+      if (visibleLatLngs.length > 0) {
+        if (visibleLatLngs.length === 1) {
+          map.flyTo(visibleLatLngs[0], 13.5, { duration: 1.0 });
+        } else {
+          map.fitBounds(visibleLatLngs, { padding: [50, 50], maxZoom: 13, animate: true });
+        }
+      }
     }
 
     function renderSidebarSpots() {
@@ -535,7 +691,7 @@
               </div>
               <div class="text-[10px] text-slate-400 flex items-center space-x-2">
                 <span><i class="fa-regular fa-clock mr-1"></i>${spot.time}</span>
-                <span class="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 border border-slate-700">${spot.category}</span>
+                <span class="px-1.5 py-0.2 rounded ${spot.region === 'taichung' ? 'bg-sky-950 text-sky-400 border border-sky-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">${spot.category}</span>
               </div>
             </div>
           </div>
@@ -562,6 +718,8 @@
       document.getElementById('drawerTimeTag').innerHTML = `<i class="fa-regular fa-clock mr-1"></i>${spot.time}`;
       document.getElementById('drawerSpotImg').src = spot.image;
       document.getElementById('drawerLocationShort').textContent = spot.locationShort;
+      document.getElementById('drawerOldHighlight').textContent = spot.oldHighlight;
+      document.getElementById('drawerKidHighlight').textContent = spot.kidHighlight;
       document.getElementById('drawerTransport').textContent = spot.transport;
       document.getElementById('drawerWeatherSuit').textContent = spot.weatherSuit;
       document.getElementById('drawerDesc').textContent = spot.desc;
@@ -573,8 +731,8 @@
       // Update Save Button State
       updateSaveButtonUI();
 
-      // External Map Link
-      document.getElementById('btnExternalMap').href = `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}`;
+      // External Google Map Navigation Link
+      document.getElementById('btnExternalMap').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.name + ' ' + spot.locationShort)}`;
 
       // Show Drawer
       const drawer = document.getElementById('spotDrawer');
@@ -699,6 +857,8 @@
         summaryText += `${i + 1}. ${s.name} (${s.time})\n`;
         summaryText += `   📍 位置：${s.locationShort}\n`;
         summaryText += `   🚗 交通：${s.transport}\n`;
+        summaryText += `   👴 長輩適應：${s.oldHighlight}\n`;
+        summaryText += `   👶 小孩放電：${s.kidHighlight}\n`;
         summaryText += `   💡 備案/替代：${s.backupName}\n\n`;
       });
 
@@ -712,10 +872,60 @@
       showToast('已複製家族行程簡報，可直接貼到 LINE 群組！', 'fa-solid fa-copy text-emerald-400');
     }
 
+    // Referenced Chart.js Radar logic from index_v1.html
+    function openRadarModal() {
+      document.getElementById('radarModal').classList.remove('hidden');
+
+      if (!chartInstance) {
+        const ctx = document.getElementById('tripChart').getContext('2d');
+        chartInstance = new Chart(ctx, {
+          type: 'radar',
+          data: {
+            labels: ['舒適度', '放電度', '美食深度', '停車便利', '拍照效果'],
+            datasets: [{
+              label: '家族行程評分',
+              data: [95, 80, 90, 100, 85],
+              backgroundColor: 'rgba(14, 165, 233, 0.25)',
+              borderColor: '#0ea5e9',
+              pointBackgroundColor: '#38bdf8',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                min: 0,
+                max: 100,
+                ticks: { display: false },
+                grid: { color: '#334155' },
+                pointLabels: { color: '#cbd5e1', font: { size: 11 } }
+              }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+    }
+
     function setupEventListeners() {
-      // Close Drawer
+      // Close Drawer & Modals
       document.getElementById('btnCloseDrawer').addEventListener('click', closeSpotDrawer);
       document.getElementById('drawerOverlay').addEventListener('click', closeSpotDrawer);
+
+      // Radar Modal
+      document.getElementById('btnOpenRadar').addEventListener('click', openRadarModal);
+      document.getElementById('btnCloseRadar').addEventListener('click', () => {
+        document.getElementById('radarModal').classList.add('hidden');
+      });
+
+      // Tips Modal
+      document.getElementById('btnOpenTips').addEventListener('click', () => {
+        document.getElementById('tipsModal').classList.remove('hidden');
+      });
+      document.getElementById('btnCloseTips').addEventListener('click', () => {
+        document.getElementById('tipsModal').classList.add('hidden');
+      });
 
       // Switch Backup
       document.getElementById('btnSwitchToBackup').addEventListener('click', switchToBackupSpot);
@@ -723,22 +933,26 @@
       // Save Spot
       document.getElementById('btnSaveSpot').addEventListener('click', toggleSaveCurrentSpot);
 
-      // Search & Category Filter
+      // Search
       document.getElementById('searchInput').addEventListener('input', renderSidebarSpots);
       
+      // Desktop & Mobile Unified Category Listener
       document.querySelectorAll('.cat-btn, .m-cat-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const cat = e.currentTarget.dataset.cat;
-          currentCategory = cat;
-
-          document.querySelectorAll('.cat-btn, .m-cat-btn').forEach(b => {
-            b.classList.remove('active', 'bg-sky-600', 'text-white');
-            b.classList.add('bg-slate-800', 'text-slate-400');
-          });
-
-          e.currentTarget.classList.add('active', 'bg-sky-600', 'text-white');
-          renderSidebarSpots();
+          setCategory(cat);
         });
+      });
+
+      // Quick Region Jump Buttons (UI/UX Improvement for Taichung & Chiayi)
+      document.getElementById('btnZoomOverview').addEventListener('click', () => {
+        map.flyTo([23.9500, 120.5500], 9.5);
+      });
+      document.getElementById('btnZoomTaichung').addEventListener('click', () => {
+        map.flyTo([24.2300, 120.6200], 11);
+      });
+      document.getElementById('btnZoomChiayi').addEventListener('click', () => {
+        map.flyTo([23.5100, 120.4000], 11.5);
       });
 
       // Itinerary Modal Actions
@@ -755,11 +969,6 @@
         showToast('已清空選集', 'fa-solid fa-broom text-slate-400');
       });
       document.getElementById('btnExportItinerary').addEventListener('click', exportItinerarySummary);
-
-      // Reset Map Zoom to All
-      document.getElementById('btnResetMap').addEventListener('click', () => {
-        map.flyTo([23.9500, 120.5500], 9.5);
-      });
     }
 
     function showToast(msg, iconClass) {
