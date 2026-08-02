@@ -86,14 +86,15 @@
             </div>
         </section>
 
-        <section id="detailPanel" class="hidden md:flex flex-1 flex-col bg-slate-950 overflow-y-auto pb-24 md:pb-8">
+        <!-- 加大 pb-36 避免手機版底部導航欄遮擋內容 -->
+        <section id="detailPanel" class="hidden md:flex flex-1 flex-col bg-slate-950 overflow-y-auto pb-36 md:pb-8">
             <div id="detailContent" class="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
             </div>
         </section>
     </main>
 
-    <!-- 手機端顯眼 Floating 滿版導航 Bar -->
-    <div id="mobileNavBar" class="fixed bottom-0 inset-x-0 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 p-3 z-40 md:hidden hidden">
+    <!-- 手機端顯眼 Floating 滿版導航 Bar (層級 z-40) -->
+    <div id="mobileNavBar" class="fixed bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-3 z-40 md:hidden hidden shadow-2xl">
         <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-sky-600 text-white font-extrabold text-base rounded-xl flex items-center justify-center gap-2 shadow-2xl active:scale-98 transition">
             <i class="fa-solid fa-location-arrow text-lg"></i>
             <span>開啟 Google Maps 導航前往</span>
@@ -260,7 +261,7 @@
             return (spot.locationShort && spot.locationShort.includes('臺中')) ? 'taichung' : 'chiayi';
         }
 
-        // 渲染左側景點清單 (字體已加大)
+        // 渲染左側景點清單
         function renderSidebarSpots() {
             const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
             const listContainer = document.getElementById('spotList');
@@ -328,7 +329,7 @@
             }
         }
 
-        // 渲染詳情頁 (字體已全面加大優化)
+        // 渲染詳情頁 (增加了定案按鈕容器底部 mb-12 md:mb-0 防重疊)
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
@@ -449,10 +450,13 @@
                     </div>
                 ` : ''}
 
-                <button onclick="toggleSaveSpot('${spot.id}')" class="w-full py-4 ${isSaved ? 'bg-amber-600 hover:bg-amber-500' : 'bg-sky-600 hover:bg-sky-500'} text-white font-bold text-base rounded-xl transition flex items-center justify-center gap-2 shadow-xl">
-                    <i class="fa-solid ${isSaved ? 'fa-check' : 'fa-star'} text-lg"></i>
-                    <span>${isSaved ? '已納入家族定案清單 (點擊取消)' : '納入家族定案清單'}</span>
-                </button>
+                <!-- 定案按鈕容器增加 mb-12 md:mb-0 避免手機版遮擋 -->
+                <div class="mb-12 md:mb-0">
+                    <button onclick="toggleSaveSpot('${spot.id}')" class="w-full py-4 ${isSaved ? 'bg-amber-600 hover:bg-amber-500' : 'bg-sky-600 hover:bg-sky-500'} text-white font-bold text-base rounded-xl transition flex items-center justify-center gap-2 shadow-xl">
+                        <i class="fa-solid ${isSaved ? 'fa-check' : 'fa-star'} text-lg"></i>
+                        <span>${isSaved ? '已納入家族定案清單 (點擊取消)' : '納入家族定案清單'}</span>
+                    </button>
+                </div>
             `;
         }
 
@@ -482,7 +486,6 @@
             }
         }
 
-        // 定案抽屜渲染 (字體已加大)
         function renderSavedDrawerList() {
             const savedContainer = document.getElementById('savedList');
             const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
