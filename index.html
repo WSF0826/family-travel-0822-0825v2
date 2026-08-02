@@ -1,4 +1,4 @@
-<!-- JavaScript 邏輯程式碼 -->
+<!-- JavaScript 邏輯程式碼 (已修正語法與完整格式) -->
 <script>
 // 完整景點資料集（已為全部景點補齊完整地址 address 屬性）
 const spots = [
@@ -586,15 +586,18 @@ function renderDetailPanel(spot) {
           <i class="fa-solid ${iconClass}"></i>
         </div>
         <div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs text-sky-400 font-semibold"><i class="fa-solid fa-map-pin mr-1"></i>${spot.locationShort}</span>
-            ${spot.address ? `
-              <span class="text-xs text-slate-400 border-l border-slate-700 pl-2">
-                <i class="fa-regular fa-compass mr-1"></i>${spot.address}
-              </span>
-            ` : ''}
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <span class="text-xs text-sky-400 font-semibold px-2 py-0.5 bg-sky-950 rounded border border-sky-800/80">
+              <i class="fa-solid fa-map-pin mr-1"></i>${spot.locationShort}
+            </span>
           </div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">${spot.name}</h2>
+          ${spot.address ? `
+            <div class="text-xs text-slate-300 mt-2 flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800 w-fit">
+              <i class="fa-regular fa-compass text-amber-400"></i>
+              <span>${spot.address}</span>
+            </div>
+          ` : ''}
         </div>
       </div>
     </div>
@@ -691,7 +694,7 @@ function toggleSavedDrawer() {
   }
 }
 
-// 渲染定案清單 (傳至 LINE 的行程中也會自動附帶完整地址)
+// 渲染定案清單
 function renderSavedDrawerList() {
   const savedContainer = document.getElementById('savedList');
   const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
@@ -710,7 +713,7 @@ function renderSavedDrawerList() {
   `).join('');
 }
 
-// 複製傳 LINE 訊息 (包含地址資訊)
+// 複製傳 LINE 訊息
 function copyLineSchedule() {
   const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
   if (savedSpots.length === 0) {
@@ -723,7 +726,7 @@ function copyLineSchedule() {
   });
   lineText += `完整決策沙盒地圖連結請查看群組內公告！`;
   navigator.clipboard.writeText(lineText).then(() => {
-    alert('已成功複製家族行程摘要（包含地址）！可以直接貼上傳到 LINE 群組討論。');
+    alert('已成功複製家族行程摘要！可以直接貼上傳到 LINE 群組討論。');
   });
 }
 
@@ -745,7 +748,7 @@ function initRadarChart() {
   new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['長輩舒適度', '小孩放電度', '美食豐富度', '4車停車便利', '拍照打卡度'],
+      labels: ['長辈舒適度', '小孩放電度', '美食豐富度', '4車停車便利', '拍照打卡度'],
       datasets: [{
         label: '行程指標評分',
         data: [95, 90, 85, 100, 90],
