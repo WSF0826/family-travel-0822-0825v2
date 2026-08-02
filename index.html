@@ -30,47 +30,47 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased h-screen flex flex-col overflow-hidden text-base">
 
     <!-- Header -->
     <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 shrink-0 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <div class="bg-gradient-to-r from-sky-500 to-indigo-600 p-2 rounded-lg text-white font-bold text-lg">
+            <div class="bg-gradient-to-r from-sky-500 to-indigo-600 p-2 rounded-lg text-white font-bold text-xl">
                 <i class="fa-solid fa-compass"></i>
             </div>
             <div>
-                <h1 class="font-bold text-base md:text-lg text-slate-100 flex items-center gap-2">
+                <h1 class="font-bold text-lg md:text-xl text-slate-100 flex items-center gap-2">
                     嘉義家族四日深度遊決策沙盒
                     <span class="text-xs font-normal px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">15人 4車專屬</span>
                 </h1>
-                <p class="text-xs text-slate-400 hidden md:block">2026/08/22 - 08/25 家族深度旅遊，備案一鍵切換與決策視圖</p>
+                <p class="text-sm text-slate-400 hidden md:block">2026/08/22 - 08/25 家族深度旅遊，備案一鍵切換與決策視圖</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 md:space-x-3">
-            <button onclick="toggleRadarModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+            <button onclick="toggleRadarModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm rounded-lg border border-slate-700 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-pie text-sky-400"></i>
                 <span class="hidden sm:inline">節奏分析</span>
             </button>
-            <button onclick="toggleTipsModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+            <button onclick="toggleTipsModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm rounded-lg border border-slate-700 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-car text-amber-400"></i>
                 <span class="hidden sm:inline">4車心法</span>
             </button>
-            <button onclick="toggleSavedDrawer()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-sky-900/40">
+            <button onclick="toggleSavedDrawer()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-sky-900/40">
                 <i class="fa-solid fa-star"></i>
                 <span>定案清單</span>
-                <span id="savedCountBadge" class="bg-white text-sky-900 px-1.5 py-0.2 rounded-full text-[10px] font-extrabold">0</span>
+                <span id="savedCountBadge" class="bg-white text-sky-900 px-2 py-0.5 rounded-full text-xs font-extrabold">0</span>
             </button>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-slate-900/60 border-b border-slate-800 px-4 py-2 shrink-0 overflow-x-auto flex space-x-2 no-scrollbar">
-        <button onclick="filterCategory('ALL')" class="cat-btn active px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-sky-600 text-white" data-cat="ALL">全部景點</button>
-        <button onclick="filterCategory('DAY 1 海線')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 1 海線">DAY 1 海線</button>
-        <button onclick="filterCategory('DAY 2 美學')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 2 美學">DAY 2 美學</button>
-        <button onclick="filterCategory('DAY 3 萌寵農創')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 3 萌寵農創">DAY 3 萌寵農創</button>
-        <button onclick="filterCategory('DAY 4 北返中繼')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 4 北返中繼">DAY 4 北返中繼</button>
-        <button onclick="filterCategory('☔ 備案專區')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-amber-400 border border-amber-900/50 hover:bg-slate-700" data-cat="☔ 備案專區">☔ 備案專區</button>
+    <nav class="bg-slate-900/60 border-b border-slate-800 px-4 py-2.5 shrink-0 overflow-x-auto flex space-x-2 no-scrollbar">
+        <button onclick="filterCategory('ALL')" class="cat-btn active px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-sky-600 text-white" data-cat="ALL">全部景點</button>
+        <button onclick="filterCategory('DAY 1 海線')" class="cat-btn px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 1 海線">DAY 1 海線</button>
+        <button onclick="filterCategory('DAY 2 美學')" class="cat-btn px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 2 美學">DAY 2 美學</button>
+        <button onclick="filterCategory('DAY 3 萌寵農創')" class="cat-btn px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 3 萌寵農創">DAY 3 萌寵農創</button>
+        <button onclick="filterCategory('DAY 4 北返中繼')" class="cat-btn px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 4 北返中繼">DAY 4 北返中繼</button>
+        <button onclick="filterCategory('☔ 備案專區')" class="cat-btn px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-slate-800 text-amber-400 border border-amber-900/50 hover:bg-slate-700" data-cat="☔ 備案專區">☔ 備案專區</button>
     </nav>
 
     <!-- Main Content -->
@@ -78,8 +78,8 @@
         <section id="listPanel" class="w-full md:w-80 lg:w-96 border-r border-slate-800 flex flex-col bg-slate-900/40 shrink-0">
             <div class="p-3 border-b border-slate-800/80">
                 <div class="relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋景點、美食、備案、地址..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500 transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋景點、美食、備案、地址..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500 transition">
                 </div>
             </div>
             <div id="spotList" class="flex-1 overflow-y-auto p-3 space-y-2">
@@ -92,10 +92,10 @@
         </section>
     </main>
 
-    <!-- [新增優化 1] 手機端顯眼 Floating 滿版導航 Floating Bar -->
+    <!-- 手機端顯眼 Floating 滿版導航 Bar -->
     <div id="mobileNavBar" class="fixed bottom-0 inset-x-0 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 p-3 z-40 md:hidden hidden">
-        <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-3 bg-gradient-to-r from-amber-500 to-sky-600 text-white font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-2xl active:scale-98 transition">
-            <i class="fa-solid fa-location-arrow text-base"></i>
+        <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-sky-600 text-white font-extrabold text-base rounded-xl flex items-center justify-center gap-2 shadow-2xl active:scale-98 transition">
+            <i class="fa-solid fa-location-arrow text-lg"></i>
             <span>開啟 Google Maps 導航前往</span>
         </a>
     </div>
@@ -103,11 +103,11 @@
     <!-- Radar Modal -->
     <div id="radarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
-            <button onclick="toggleRadarModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-slate-100 mb-1 flex items-center gap-2">
+            <button onclick="toggleRadarModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-slate-100 mb-1 flex items-center gap-2">
                 <i class="fa-solid fa-chart-pie text-sky-400"></i> 行程節奏與平衡度分析
             </h3>
-            <p class="text-xs text-slate-400 mb-4">綜合評估長輩舒適度、小孩放電指數與 4 車停車便利度。</p>
+            <p class="text-sm text-slate-400 mb-4">綜合評估長輩舒適度、小孩放電指數與 4 車停車便利度。</p>
             <div class="w-full h-64 flex items-center justify-center">
                 <canvas id="radarChart"></canvas>
             </div>
@@ -117,44 +117,43 @@
     <!-- Tips Modal -->
     <div id="tipsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl relative">
-            <button onclick="toggleTipsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
+            <button onclick="toggleTipsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-slate-100 mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-car text-amber-400"></i> 15人 4車自駕與防曬必看心法
             </h3>
-            <ul class="space-y-3 text-xs text-slate-300">
-                <li class="flex items-start gap-2 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                    <i class="fa-solid fa-square-parking text-amber-400 mt-0.5 shrink-0"></i>
+            <ul class="space-y-3 text-sm text-slate-300">
+                <li class="flex items-start gap-2 bg-slate-950 p-3.5 rounded-lg border border-slate-800 leading-relaxed">
+                    <i class="fa-solid fa-square-parking text-amber-400 mt-1 shrink-0"></i>
                     <span><strong>多車分散停車策略：</strong>抵達小街區景點（如土庫里、Hoyahoyo早午餐、幸福山丘）時，4 台車請停放外圍收費停車場，切勿全數駛入狹窄巷弄。</span>
                 </li>
-                <li class="flex items-start gap-2 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                    <i class="fa-solid fa-sun text-amber-400 mt-0.5 shrink-0"></i>
+                <li class="flex items-start gap-2 bg-slate-950 p-3.5 rounded-lg border border-slate-800 leading-relaxed">
+                    <i class="fa-solid fa-sun text-amber-400 mt-1 shrink-0"></i>
                     <span><strong>嚴守室內避暑時間：</strong>每天 13:00 - 15:30 高溫時段，排定全冷氣場館（如新嘉大昆蟲館、故宮南院室內館、品皇咖啡）。</span>
                 </li>
-                <li class="flex items-start gap-2 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                    <i class="fa-solid fa-shirt text-amber-400 mt-0.5 shrink-0"></i>
+                <li class="flex items-start gap-2 bg-slate-950 p-3.5 rounded-lg border border-slate-800 leading-relaxed">
+                    <i class="fa-solid fa-shirt text-amber-400 mt-1 shrink-0"></i>
                     <span><strong>山路與親水景點裝備：</strong>阿里山/太平雲梯務必備妥防寒衣物與暈車藥；獨角仙公園與三隻小豬務必多帶一袋備用乾淨衣物。</span>
                 </li>
             </ul>
         </div>
     </div>
 
-    <!-- Saved Drawer (支援按天數排序與分享連結) -->
+    <!-- Saved Drawer -->
     <div id="savedDrawer" class="fixed inset-y-0 right-0 w-full sm:w-80 bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+            <h3 class="font-bold text-base text-slate-100 flex items-center gap-2">
                 <i class="fa-solid fa-star text-amber-400"></i> 家族定案行程清單
             </h3>
-            <button onclick="toggleSavedDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <button onclick="toggleSavedDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
         <div id="savedList" class="flex-1 overflow-y-auto p-4 space-y-4">
         </div>
         <div class="p-4 border-t border-slate-800 bg-slate-950/80 space-y-2">
-            <!-- [新增優化 2] 複製網址分享按鈕 -->
-            <button onclick="copyShareUrl()" class="w-full py-2 bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+            <button onclick="copyShareUrl()" class="w-full py-2.5 bg-sky-700 hover:bg-sky-600 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-share-nodes"></i> 複製連結分享此行程
             </button>
-            <button onclick="copyLineSchedule()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30">
-                <i class="fa-brands fa-line text-base"></i> 複製文字行程傳 LINE 群
+            <button onclick="copyLineSchedule()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30">
+                <i class="fa-brands fa-line text-lg"></i> 複製文字行程傳 LINE 群
             </button>
         </div>
     </div>
@@ -207,7 +206,7 @@
             initRadarChart();
         };
 
-        // [新增優化 2] 網址參數載入邏輯 (?saved=spot_id1,spot_id2)
+        // 網址參數載入邏輯 (?saved=spot_id1,spot_id2)
         function initSavedSpotsFromUrlOrStorage() {
             const urlParams = new URLSearchParams(window.location.search);
             const urlSaved = urlParams.get('saved');
@@ -261,7 +260,7 @@
             return (spot.locationShort && spot.locationShort.includes('臺中')) ? 'taichung' : 'chiayi';
         }
 
-        // 渲染左側景點清單
+        // 渲染左側景點清單 (字體已加大)
         function renderSidebarSpots() {
             const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
             const listContainer = document.getElementById('spotList');
@@ -276,7 +275,7 @@
             });
 
             if (filtered.length === 0) {
-                listContainer.innerHTML = `<div class="text-center py-12 text-xs text-slate-500">找不到符合條件的景點</div>`;
+                listContainer.innerHTML = `<div class="text-center py-12 text-sm text-slate-500">找不到符合條件的景點</div>`;
                 return;
             }
 
@@ -288,18 +287,18 @@
                 const bgGradient = region === 'taichung' ? 'from-sky-900 to-indigo-900 text-sky-300 border-sky-700/50' : 'from-amber-900 to-orange-900 text-amber-300 border-amber-700/50';
 
                 return `
-                    <div onclick="selectSpotById('${spot.id}')" class="p-3 bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800/80 rounded-xl cursor-pointer transition flex space-x-3 items-center group ${isActive ? 'spot-card-active' : ''}">
+                    <div onclick="selectSpotById('${spot.id}')" class="p-3.5 bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800/80 rounded-xl cursor-pointer transition flex space-x-3 items-center group ${isActive ? 'spot-card-active' : ''}">
                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${bgGradient} border flex items-center justify-center shrink-0 shadow-inner">
-                            <i class="fa-solid ${iconClass} text-lg"></i>
+                            <i class="fa-solid ${iconClass} text-xl"></i>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between mb-1">
-                                <h4 class="font-bold text-xs ${isActive ? 'text-sky-400' : 'text-slate-100'} truncate group-hover:text-sky-400 transition">${spot.name}</h4>
-                                ${isSaved ? '<i class="fa-solid fa-star text-amber-400 text-xs shrink-0"></i>' : ''}
+                                <h4 class="font-bold text-sm ${isActive ? 'text-sky-400' : 'text-slate-100'} truncate group-hover:text-sky-400 transition">${spot.name}</h4>
+                                ${isSaved ? '<i class="fa-solid fa-star text-amber-400 text-sm shrink-0"></i>' : ''}
                             </div>
-                            <div class="text-[10px] text-slate-400 flex items-center space-x-2">
+                            <div class="text-xs text-slate-400 flex items-center space-x-2">
                                 <span><i class="fa-regular fa-clock mr-1"></i>${spot.time}</span>
-                                <span class="px-1.5 py-0.2 rounded ${region === 'taichung' ? 'bg-sky-950 text-sky-400 border border-sky-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">${spot.category}</span>
+                                <span class="px-2 py-0.5 rounded text-[11px] ${region === 'taichung' ? 'bg-sky-950 text-sky-400 border border-sky-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">${spot.category}</span>
                             </div>
                         </div>
                     </div>
@@ -329,7 +328,7 @@
             }
         }
 
-        // 渲染詳情頁
+        // 渲染詳情頁 (字體已全面加大優化)
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
@@ -343,30 +342,29 @@
             const openHoursText = spot.openHours || "請洽官方公告";
             const phoneText = spot.phone || "無提供或現場洽詢";
 
-            // [新增優化 1] 更新手機端獨立浮動導航連結
             document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
 
             detailContainer.innerHTML = `
-                <button onclick="backToList()" class="md:hidden mb-4 px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-xs flex items-center gap-2">
+                <button onclick="backToList()" class="md:hidden mb-4 px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg text-sm flex items-center gap-2">
                     <i class="fa-solid fa-chevron-left"></i> 返回景點清單
                 </button>
 
-                <div class="relative h-48 md:h-56 rounded-2xl overflow-hidden mb-6 p-6 bg-gradient-to-br ${bgGradient} border border-slate-800 flex flex-col justify-between shadow-2xl">
+                <div class="relative h-52 md:h-60 rounded-2xl overflow-hidden mb-6 p-6 bg-gradient-to-br ${bgGradient} border border-slate-800 flex flex-col justify-between shadow-2xl">
                     <div class="flex items-center justify-between">
                         <div class="flex gap-2">
                             <span class="px-3 py-1 rounded-full text-xs font-bold ${region === 'taichung' ? 'bg-sky-600 text-white' : 'bg-amber-600 text-white'}">${spot.category}</span>
                             <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-900/80 backdrop-blur-md text-slate-200 border border-slate-700/50"><i class="fa-regular fa-clock mr-1"></i>停留 ${spot.time}</span>
                         </div>
-                        <a href="${spot.googleMapsUrl}" target="_blank" class="px-3 py-1.5 bg-slate-900/80 hover:bg-sky-600 text-white text-xs font-bold rounded-lg backdrop-blur-md transition flex items-center gap-1.5 border border-slate-700">
+                        <a href="${spot.googleMapsUrl}" target="_blank" class="px-3.5 py-2 bg-slate-900/80 hover:bg-sky-600 text-white text-xs font-bold rounded-lg backdrop-blur-md transition flex items-center gap-1.5 border border-slate-700">
                             <i class="fa-solid fa-location-dot text-amber-400"></i> 地圖導航 ↗
                         </a>
                     </div>
                     <div class="flex items-end space-x-4">
-                        <div class="p-4 bg-slate-900/80 rounded-2xl border border-slate-700/50 text-sky-400 text-3xl shrink-0 hidden sm:block">
+                        <div class="p-4 bg-slate-900/80 rounded-2xl border border-slate-700/50 text-sky-400 text-4xl shrink-0 hidden sm:block">
                             <i class="fa-solid ${iconClass}"></i>
                         </div>
                         <div>
-                            <span class="text-xs text-sky-400 font-semibold"><i class="fa-solid fa-map-pin mr-1"></i>${spot.locationShort}</span>
+                            <span class="text-sm text-sky-400 font-semibold"><i class="fa-solid fa-map-pin mr-1"></i>${spot.locationShort}</span>
                             <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">${spot.name}</h2>
                         </div>
                     </div>
@@ -374,54 +372,54 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
-                        <div class="p-2 bg-amber-950 text-amber-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-user-check"></i></div>
+                        <div class="p-2.5 bg-amber-950 text-amber-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-user-check text-base"></i></div>
                         <div>
-                            <h4 class="text-xs font-bold text-amber-400 mb-1">👴 長輩體驗評語</h4>
-                            <p class="text-xs text-slate-300">${seniorText}</p>
+                            <h4 class="text-sm font-bold text-amber-400 mb-1">👴 長輩體驗評語</h4>
+                            <p class="text-sm text-slate-300 leading-relaxed">${seniorText}</p>
                         </div>
                     </div>
                     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
-                        <div class="p-2 bg-sky-950 text-sky-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-child"></i></div>
+                        <div class="p-2.5 bg-sky-950 text-sky-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-child text-base"></i></div>
                         <div>
-                            <h4 class="text-xs font-bold text-sky-400 mb-1">👶 小孩體驗評語</h4>
-                            <p class="text-xs text-slate-300">${kidText}</p>
+                            <h4 class="text-sm font-bold text-sky-400 mb-1">👶 小孩體驗評語</h4>
+                            <p class="text-sm text-slate-300 leading-relaxed">${kidText}</p>
                         </div>
                     </div>
                     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
-                        <div class="p-2 bg-indigo-950 text-indigo-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-car"></i></div>
+                        <div class="p-2.5 bg-indigo-950 text-indigo-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-car text-base"></i></div>
                         <div>
-                            <h4 class="text-xs font-bold text-indigo-400 mb-1">🚗 4台車 / 交通指南</h4>
-                            <p class="text-xs text-slate-300">${spot.transport}</p>
+                            <h4 class="text-sm font-bold text-indigo-400 mb-1">🚗 4台車 / 交通指南</h4>
+                            <p class="text-sm text-slate-300 leading-relaxed">${spot.transport}</p>
                         </div>
                     </div>
                     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
-                        <div class="p-2 bg-emerald-950 text-emerald-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-cloud-sun"></i></div>
+                        <div class="p-2.5 bg-emerald-950 text-emerald-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-cloud-sun text-base"></i></div>
                         <div>
-                            <h4 class="text-xs font-bold text-emerald-400 mb-1">🌤️ 氣候與舒適度</h4>
-                            <p class="text-xs text-slate-300">${spot.weatherSuit}</p>
+                            <h4 class="text-sm font-bold text-emerald-400 mb-1">🌤️ 氣候與舒適度</h4>
+                            <p class="text-sm text-slate-300 leading-relaxed">${spot.weatherSuit}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                    <div class="bg-slate-900/60 border border-slate-800 p-4.5 rounded-xl flex items-center justify-between">
                         <div class="flex items-center space-x-3 min-w-0">
-                            <i class="fa-solid fa-map-location-dot text-sky-400 text-lg shrink-0"></i>
+                            <i class="fa-solid fa-map-location-dot text-sky-400 text-xl shrink-0"></i>
                             <div class="min-w-0">
                                 <h4 class="text-xs font-bold text-slate-400">📍 詳細地址</h4>
-                                <p class="text-xs font-semibold text-slate-200 truncate mt-0.5">${fullAddress}</p>
+                                <p class="text-sm font-semibold text-slate-200 truncate mt-0.5">${fullAddress}</p>
                             </div>
                         </div>
                         <a href="${spot.googleMapsUrl}" target="_blank" class="text-xs text-sky-400 hover:text-sky-300 underline shrink-0 ml-2">開啟地圖</a>
                     </div>
 
-                    <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex flex-col justify-center space-y-2">
-                        <div class="flex items-center space-x-2 text-xs">
+                    <div class="bg-slate-900/60 border border-slate-800 p-4.5 rounded-xl flex flex-col justify-center space-y-2.5">
+                        <div class="flex items-center space-x-2 text-sm">
                             <i class="fa-regular fa-clock text-amber-400 shrink-0"></i>
                             <span class="text-slate-400 font-bold shrink-0">營業時間：</span>
                             <span class="text-slate-200 font-semibold truncate">${openHoursText}</span>
                         </div>
-                        <div class="flex items-center space-x-2 text-xs">
+                        <div class="flex items-center space-x-2 text-sm">
                             <i class="fa-solid fa-phone text-emerald-400 shrink-0"></i>
                             <span class="text-slate-400 font-bold shrink-0">聯絡電話：</span>
                             ${spot.phone && spot.phone.includes('-') ? `<a href="tel:${spot.phone}" class="text-sky-400 hover:underline font-semibold">${phoneText}</a>` : `<span class="text-slate-200 font-semibold">${phoneText}</span>`}
@@ -429,30 +427,30 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl mb-6">
-                    <h3 class="text-sm font-bold text-slate-100 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-lightbulb text-amber-400"></i> 攻略與決策亮點
+                <div class="bg-slate-900/60 border border-slate-800 p-5 md:p-6 rounded-2xl mb-6">
+                    <h3 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-amber-400 text-lg"></i> 攻略與決策亮點
                     </h3>
-                    <p class="text-xs md:text-sm text-slate-300 leading-relaxed">${spot.desc}</p>
+                    <p class="text-sm md:text-base text-slate-300 leading-relaxed">${spot.desc}</p>
                 </div>
 
                 ${spot.backupId ? `
-                    <div class="bg-gradient-to-r from-indigo-950/60 to-purple-950/60 border border-indigo-800/60 p-5 rounded-2xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="bg-gradient-to-r from-indigo-950/60 to-purple-950/60 border border-indigo-800/60 p-5 md:p-6 rounded-2xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                            <div class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1 flex items-center gap-1">
                                 <i class="fa-solid fa-shuffle"></i> 即時情境與替換備案
                             </div>
-                            <h4 class="text-sm font-bold text-white mb-1">一鍵切換至：${spot.backupName}</h4>
-                            <p class="text-xs text-slate-300">${spot.backupReason}</p>
+                            <h4 class="text-base font-bold text-white mb-1">一鍵切換至：${spot.backupName}</h4>
+                            <p class="text-sm text-slate-300">${spot.backupReason}</p>
                         </div>
-                        <button onclick="selectSpotById('${spot.backupId}')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition shrink-0 flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-900/40">
+                        <button onclick="selectSpotById('${spot.backupId}')" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition shrink-0 flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-900/40">
                             切換至備案 ➔
                         </button>
                     </div>
                 ` : ''}
 
-                <button onclick="toggleSaveSpot('${spot.id}')" class="w-full py-3.5 ${isSaved ? 'bg-amber-600 hover:bg-amber-500' : 'bg-sky-600 hover:bg-sky-500'} text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-xl">
-                    <i class="fa-solid ${isSaved ? 'fa-check' : 'fa-star'}"></i>
+                <button onclick="toggleSaveSpot('${spot.id}')" class="w-full py-4 ${isSaved ? 'bg-amber-600 hover:bg-amber-500' : 'bg-sky-600 hover:bg-sky-500'} text-white font-bold text-base rounded-xl transition flex items-center justify-center gap-2 shadow-xl">
+                    <i class="fa-solid ${isSaved ? 'fa-check' : 'fa-star'} text-lg"></i>
                     <span>${isSaved ? '已納入家族定案清單 (點擊取消)' : '納入家族定案清單'}</span>
                 </button>
             `;
@@ -484,17 +482,16 @@
             }
         }
 
-        // [新增優化 3] 按天數排序 (Timeline / Day-by-Day View) 渲染定案抽屜
+        // 定案抽屜渲染 (字體已加大)
         function renderSavedDrawerList() {
             const savedContainer = document.getElementById('savedList');
             const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
 
             if (savedSpots.length === 0) {
-                savedContainer.innerHTML = `<div class="text-center py-12 text-xs text-slate-500">目前尚未納入定案景點</div>`;
+                savedContainer.innerHTML = `<div class="text-center py-12 text-sm text-slate-500">目前尚未納入定案景點</div>`;
                 return;
             }
 
-            // 按天數分組
             const categoriesOrder = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
             let html = '';
 
@@ -503,17 +500,17 @@
                 if (group.length > 0) {
                     html += `
                         <div class="space-y-2">
-                            <div class="text-[11px] font-extrabold text-sky-400 border-b border-slate-800 pb-1 flex items-center justify-between">
+                            <div class="text-xs font-extrabold text-sky-400 border-b border-slate-800 pb-1 flex items-center justify-between">
                                 <span>📅 ${cat}</span>
-                                <span class="text-[9px] text-slate-500 font-normal">${group.length} 個景點</span>
+                                <span class="text-xs text-slate-500 font-normal">${group.length} 個景點</span>
                             </div>
                             ${group.map(s => `
-                                <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between hover:border-slate-700 transition">
+                                <div class="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex items-center justify-between hover:border-slate-700 transition">
                                     <div class="min-w-0 pr-2">
-                                        <h5 class="font-bold text-xs text-slate-200 truncate">${s.name}</h5>
-                                        <p class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${s.time}</p>
+                                        <h5 class="font-bold text-sm text-slate-200 truncate">${s.name}</h5>
+                                        <p class="text-xs text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${s.time}</p>
                                     </div>
-                                    <button onclick="toggleSaveSpot('${s.id}')" class="text-slate-500 hover:text-red-400 p-1.5 shrink-0"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                                    <button onclick="toggleSaveSpot('${s.id}')" class="text-slate-500 hover:text-red-400 p-2 shrink-0"><i class="fa-solid fa-trash-can text-sm"></i></button>
                                 </div>
                             `).join('')}
                         </div>
@@ -524,7 +521,6 @@
             savedContainer.innerHTML = html;
         }
 
-        // [新增優化 2] 複製包含參數的分享連結
         function copyShareUrl() {
             if (savedSpotIds.length === 0) {
                 alert('請先選擇至少一個定案景點！');
@@ -538,7 +534,6 @@
             });
         }
 
-        // 複製傳 LINE 訊息
         function copyLineSchedule() {
             const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
             if (savedSpots.length === 0) {
@@ -547,7 +542,6 @@
             }
 
             let lineText = `🚗【2026 嘉義家族 4 天 3 夜深度遊定案行程】\n\n`;
-            
             const categoriesOrder = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
             categoriesOrder.forEach(cat => {
                 const group = savedSpots.filter(s => s.category === cat);
@@ -572,7 +566,6 @@
             });
         }
 
-        // Modals
         function toggleRadarModal() {
             const modal = document.getElementById('radarModal');
             modal.classList.toggle('hidden');
@@ -585,7 +578,6 @@
             modal.classList.toggle('flex');
         }
 
-        // Radar Chart
         function initRadarChart() {
             const ctx = document.getElementById('radarChart').getContext('2d');
             new Chart(ctx, {
@@ -606,7 +598,7 @@
                         r: {
                             angleLines: { color: '#334155' },
                             grid: { color: '#334155' },
-                            pointLabels: { color: '#94a3b8', font: { size: 10 } },
+                            pointLabels: { color: '#94a3b8', font: { size: 12 } },
                             ticks: { display: false, backdropColor: 'transparent' },
                             suggestedMin: 0,
                             suggestedMax: 100
