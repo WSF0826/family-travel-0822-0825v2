@@ -63,8 +63,8 @@
     <button onclick="filterCategory('ALL')" class="cat-btn active px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-sky-600 text-white" data-cat="ALL">全部景點</button>
     <button onclick="filterCategory('DAY 1 海線')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 1 海線">DAY 1 海線</button>
     <button onclick="filterCategory('DAY 2 美學')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 2 美學">DAY 2 美學</button>
-    <button onclick="filterCategory('DAY 3 萌寵農創')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 3 萌寵">DAY 3 萌寵</button>
-    <button onclick="filterCategory('DAY 4 北返中繼')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 4 中繼">DAY 4 中繼</button>
+    <button onclick="filterCategory('DAY 3 萌寵農創')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 3 萌寵農創">DAY 3 萌寵農創</button>
+    <button onclick="filterCategory('DAY 4 北返中繼')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 4 北返中繼">DAY 4 北返中繼</button>
     <button onclick="filterCategory('☔ 備案專區')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition bg-slate-800 text-amber-400 border border-amber-900/50 hover:bg-slate-700" data-cat="☔ 備案專區">☔ 備案專區</button>
   </nav>
 
@@ -154,7 +154,7 @@
 
   <!-- JavaScript 邏輯程式碼 -->
   <script>
-    // 完整景點資料集（包含佐登妮絲城堡 fa-castle 及其他對應圖示）
+    // 完整景點資料集（已整合蒸餾自部落格之觀光工廠）
     const spots = [
       // ================= DAY 1：台中海線/港區 =================
       {
@@ -216,7 +216,7 @@
         category: "DAY 2 美學",
         time: "2.5 小時",
         locationShort: "嘉義縣大林鎮",
-        icon: "fa-chess-rook", // 採用相容性極高之歐風城堡/棋堡圖示
+        icon: "fa-chess-rook",
         googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=佐登妮絲城堡",
         seniorEval: "室內冷氣逛香氛美學展區，全區無障礙坡道平緩好走",
         kidEval: "歐風巴洛克城堡與噴泉，拍照打卡效果極佳",
@@ -226,6 +226,23 @@
         backupId: "spot_npm_south",
         backupName: "故宮南院 (兒童創意中心與展廳)",
         backupReason: "若景點陽光折射較熱，可提前移駕至故宮南院無障礙大廳吹冷氣"
+      },
+      {
+        id: "spot_oulowo_castle",
+        name: "歐樂沃築夢城堡 (D2美學備選)",
+        category: "DAY 2 美學",
+        time: "1.5 - 2 小時",
+        locationShort: "嘉義縣大林鎮",
+        icon: "fa-cookie-bite",
+        googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=歐樂沃築夢城堡",
+        seniorEval: "無障礙空間完善，能在華麗室內悠閒喝下午茶看巧克力製作",
+        kidEval: "宛如迪士尼樂園，有旋轉木馬與巧克力互動，拍照放電超開心",
+        transport: "大埔美園區內道路寬敞，有專屬大型停車場，4台車輕鬆停放",
+        weatherSuit: "晴雨皆宜（全室內冷氣，絕佳避暑聖地）",
+        desc: "全新開幕的夢幻粉藍巧克力城堡，超好拍且適合家族大團體買伴手禮與享用下午茶。",
+        backupId: "spot_meatball_planet",
+        backupName: "丸聚星球",
+        backupReason: "若遇人潮過多，可轉往同在大埔美園區的丸聚星球"
       },
       {
         id: "spot_chayi_art_museum",
@@ -298,6 +315,23 @@
 
       // ================= DAY 3：萌寵農創/避暑體驗 =================
       {
+        id: "spot_meatball_planet",
+        name: "丸聚星球 (D3萌寵農創)",
+        category: "DAY 3 萌寵農創",
+        time: "1 - 1.5 小時",
+        locationShort: "嘉義縣大林鎮",
+        icon: "fa-rocket",
+        googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=丸聚星球",
+        seniorEval: "冷氣極強，能免費試吃熱騰騰貢丸，長輩最愛的在地好滋味",
+        kidEval: "超酷的宇宙星球造景與互動遊戲，像在太空站探險一樣有趣",
+        transport: "位於大埔美園區，車位多，15人大團體上下車安全方便",
+        weatherSuit: "晴雨皆宜（全室內，完全不怕日曬雨淋）",
+        desc: "嘉楠食品打造的貢丸觀光工廠，充滿宇宙科技感，免費試吃且寓教於樂。",
+        backupId: "spot_oulowo_castle",
+        backupName: "歐樂沃築夢城堡",
+        backupReason: "若想吃甜點下午茶，可直接切換至附近的巧克力城堡"
+      },
+      {
         id: "spot_lengyan_co2",
         name: "冷研碳索館 (D3避暑體驗)",
         category: "DAY 3 萌寵農創",
@@ -331,8 +365,42 @@
         backupName: "冷研碳索館",
         backupReason: "酷暑或驟雨時可一鍵切換至室內乾冰主題館"
       },
+      {
+        id: "spot_guoran_tea",
+        name: "果然茶香觀光園區 (D3農創體驗)",
+        category: "DAY 3 萌寵農創",
+        time: "1.5 - 2 小時",
+        locationShort: "嘉義縣中埔鄉",
+        icon: "fa-leaf",
+        googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=果然茶香觀光園區",
+        seniorEval: "能品茗茶香、試吃果乾，園區步道規劃良好適合長輩散步",
+        kidEval: "有小火車、溜滑梯、森林迷宮與卡丁車，室外遊戲空間極其豐富",
+        transport: "備有停車場，位於中埔交流道附近，交通非常便利",
+        weatherSuit: "晴天為佳（因含有大量戶外親子遊樂設施）",
+        desc: "結合品茶、果乾與親子遊樂設施的休閒園區，大人喝茶買伴手禮，小孩玩卡丁車溜滑梯。",
+        backupId: "spot_meatball_planet",
+        backupName: "丸聚星球",
+        backupReason: "若遇午後雷陣雨，建議一鍵切換至全室內的丸聚星球"
+      },
 
       // ================= DAY 4：北返中繼/生態與選品 =================
+      {
+        id: "spot_pinhuang_coffee",
+        name: "品皇咖啡觀光工廠 (D4北返中繼)",
+        category: "DAY 4 北返中繼",
+        time: "1 - 1.5 小時",
+        locationShort: "嘉義縣水上鄉",
+        icon: "fa-mug-hot",
+        googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=品皇咖啡觀光工廠新館",
+        seniorEval: "長輩天堂！可無限免費試喝各種咖啡與奶茶，且動線平緩寬敞",
+        kidEval: "門口巨無霸咖啡杯可拍趣味合照，館內有熱鬧市集可逛",
+        transport: "全新廠區佔地極廣，遊覽車與小客車停車場極大，4車完全沒問題",
+        weatherSuit: "晴雨皆宜（躲太陽/避雨的絕佳休息站）",
+        desc: "全新落成的咖啡觀光工廠，免門票且提供大方試飲，是北返或南下最佳的中繼休息站。",
+        backupId: "spot_white_toothpaste",
+        backupName: "白人牙膏觀光工廠",
+        backupReason: "若想看古蹟或讓小孩吃冰棒，可切換至白人牙膏"
+      },
       {
         id: "spot_beetle_park",
         name: "東勢獨角仙生態公園 (D4北返戶外)",
@@ -352,6 +420,23 @@
       },
 
       // ================= 備案專區：質感與室內備案 =================
+      {
+        id: "spot_white_toothpaste",
+        name: "白人牙膏觀光工廠 & 將軍府 (雨天神級備案)",
+        category: "☔ 備案專區",
+        time: "1.5 - 2 小時",
+        locationShort: "嘉義縣水上鄉",
+        icon: "fa-tooth",
+        googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=白人牙膏觀光工廠",
+        seniorEval: "把整座清朝將軍府搬進室內，長輩對古蹟建築絕對歎為觀止",
+        kidEval: "可以吃免費冰棒，空間大可走動，還能體驗大清朝服飾變裝",
+        transport: "擁有超大型免費停車場，非常適合多車家族大團體同時停放",
+        weatherSuit: "晴雨皆宜（神級雨天備案，全區有遮蔽）",
+        desc: "不僅賣牙膏，更是把百年將軍府重現的超狂觀光工廠，提供免費吃冰喝咖啡，是最強雨天備案。",
+        backupId: "spot_pinhuang_coffee",
+        backupName: "品皇咖啡觀光工廠",
+        backupReason: "若看膩古蹟想純購物買伴手禮，可切換至附近的品皇咖啡"
+      },
       {
         id: "spot_tuku_walk",
         name: "土庫里雜貨散策 (D1/D4質感備案)",
@@ -409,7 +494,7 @@
       return (spot.locationShort && spot.locationShort.includes('臺中')) ? 'taichung' : 'chiayi';
     }
 
-    // 渲染左側景點清單 (確保完美讀取 spot.icon)
+    // 渲染左側景點清單
     function renderSidebarSpots() {
       const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
       const listContainer = document.getElementById('spotList');
@@ -429,7 +514,6 @@
         const isSaved = savedSpotIds.includes(spot.id);
         const isActive = currentSpot && currentSpot.id === spot.id;
         const region = getSpotRegion(spot);
-        // 確保精準讀取 spot.icon 屬性，防呆機制備用 fa-location-dot
         const iconClass = spot.icon ? spot.icon : "fa-location-dot";
         const bgGradient = region === 'taichung' ? 'from-sky-900 to-indigo-900 text-sky-300 border-sky-700/50' : 'from-amber-900 to-orange-900 text-amber-300 border-amber-700/50';
 
@@ -482,7 +566,7 @@
       listPanel.classList.remove('hidden');
     }
 
-    // 渲染右側詳情面板 (確保讀取 spot.icon)
+    // 渲染右側詳情面板
     function renderDetailPanel(spot) {
       const detailContainer = document.getElementById('detailContent');
       const isSaved = savedSpotIds.includes(spot.id);
@@ -499,7 +583,7 @@
           <i class="fa-solid fa-chevron-left"></i> 返回景點清單
         </button>
 
-        <!-- 主橫幅與標題 (採用高質感漸層與圖示呈現) -->
+        <!-- 主橫幅與標題 -->
         <div class="relative h-48 md:h-56 rounded-2xl overflow-hidden mb-6 p-6 bg-gradient-to-br ${bgGradient} border border-slate-800 flex flex-col justify-between shadow-2xl">
           <div class="flex items-center justify-between">
             <div class="flex gap-2">
@@ -522,7 +606,7 @@
           </div>
         </div>
 
-        <!-- 體驗指標卡片 (兩代體驗與交通) -->
+        <!-- 體驗指標卡片 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
             <div class="p-2 bg-amber-950 text-amber-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-user-check"></i></div>
@@ -565,7 +649,7 @@
           <p class="text-xs md:text-sm text-slate-300 leading-relaxed">${spot.desc}</p>
         </div>
 
-        <!-- 即時情境與替換備案 (Scenario) -->
+        <!-- 即時情境與替換備案 -->
         ${spot.backupId ? `
           <div class="bg-gradient-to-r from-indigo-950/60 to-purple-950/60 border border-indigo-800/60 p-5 rounded-2xl mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
