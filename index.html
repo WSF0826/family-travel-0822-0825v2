@@ -86,11 +86,19 @@
             </div>
         </section>
 
-        <section id="detailPanel" class="hidden md:flex flex-1 flex-col bg-slate-950 overflow-y-auto">
+        <section id="detailPanel" class="hidden md:flex flex-1 flex-col bg-slate-950 overflow-y-auto pb-24 md:pb-8">
             <div id="detailContent" class="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
             </div>
         </section>
     </main>
+
+    <!-- [新增優化 1] 手機端顯眼 Floating 滿版導航 Floating Bar -->
+    <div id="mobileNavBar" class="fixed bottom-0 inset-x-0 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 p-3 z-40 md:hidden hidden">
+        <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-3 bg-gradient-to-r from-amber-500 to-sky-600 text-white font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-2xl active:scale-98 transition">
+            <i class="fa-solid fa-location-arrow text-base"></i>
+            <span>開啟 Google Maps 導航前往</span>
+        </a>
+    </div>
 
     <!-- Radar Modal -->
     <div id="radarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
@@ -130,7 +138,7 @@
         </div>
     </div>
 
-    <!-- Saved Drawer -->
+    <!-- Saved Drawer (支援按天數排序與分享連結) -->
     <div id="savedDrawer" class="fixed inset-y-0 right-0 w-full sm:w-80 bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between">
             <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
@@ -138,9 +146,13 @@
             </h3>
             <button onclick="toggleSavedDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
-        <div id="savedList" class="flex-1 overflow-y-auto p-4 space-y-3">
+        <div id="savedList" class="flex-1 overflow-y-auto p-4 space-y-4">
         </div>
-        <div class="p-4 border-t border-slate-800 bg-slate-950/60">
+        <div class="p-4 border-t border-slate-800 bg-slate-950/80 space-y-2">
+            <!-- [新增優化 2] 複製網址分享按鈕 -->
+            <button onclick="copyShareUrl()" class="w-full py-2 bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-share-nodes"></i> 複製連結分享此行程
+            </button>
             <button onclick="copyLineSchedule()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30">
                 <i class="fa-brands fa-line text-base"></i> 複製文字行程傳 LINE 群
             </button>
@@ -148,518 +160,79 @@
     </div>
 
     <script>
-        // 完整景點資料集（已加入全景點詳細地址 address、營業時間 openHours、聯絡電話 phone）
+        // 景點資料集
         const spots = [
-            // ================= DAY 1：台中海線/港區 =================
-            {
-                id: "spot_bear_harbor",
-                name: "寶熊漁樂碼頭 (D1上午)",
-                category: "DAY 1 海線",
-                time: "2 小時",
-                locationShort: "臺中市潭子區",
-                address: "臺中市潭子區中山路三段11號",
-                openHours: "10:00 – 17:30 (週二、三公休)",
-                phone: "04-3505-6115",
-                icon: "fa-fish",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=寶熊漁樂碼頭",
-                seniorEval: "室內平緩、有座椅與冷氣，非常舒適",
-                kidEval: "釣魚故事館與巨型釣魚機，放電指數高",
-                transport: "附設專用停車場，4台車好停",
-                weatherSuit: "晴雨皆宜（室內館）",
-                desc: "全台唯一釣具主題觀光工廠，適合家族作為第一站室內景點。",
-                backupId: "spot_tuku_walk",
-                backupName: "土庫里雜貨散策",
-                backupReason: "若想切換至質感街區漫步，可轉往土庫里"
-            },
-            {
-                id: "spot_mitsui_outlet",
-                name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)",
-                category: "DAY 1 海線",
-                time: "3-4 小時",
-                locationShort: "臺中市梧棲區",
-                address: "臺中市梧棲區臺灣大道十段168號",
-                openHours: "11:00 – 21:30 (假日 10:30 開門)",
-                phone: "04-2521-8999",
-                icon: "fa-bag-shopping",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港",
-                seniorEval: "美食街選擇多，有室內休息區與電梯",
-                kidEval: "摩天輪與海景景觀，空間寬敞",
-                transport: "大型免費停車場，15人4車無壓力",
-                weatherSuit: "晴雨皆宜（購物中心）",
-                desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。",
-                backupId: "spot_tuku_walk",
-                backupName: "土庫里雜貨散策",
-                backupReason: "若不想逛大型商場，可切換至文青選品小店路線"
-            },
-            {
-                id: "spot_gaomei_wetland",
-                name: "高美濕地木棧道 (D1傍晚 Plan A)",
-                category: "DAY 1 海線",
-                time: "1.5 小時",
-                locationShort: "臺中市清水區", address: "臺中市清水區美堤街",
-                openHours: "09:00 – 18:00 (開放時間依潮汐時間調整)",
-                phone: "04-2656-5810",
-                icon: "fa-water",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=高美濕地木棧道",
-                seniorEval: "夕陽美景絕佳，需注意海風與海風吹拂溫度",
-                kidEval: "潮間帶觀察螃蟹與彈塗魚，自然生態豐富",
-                transport: "周邊有收費停車場，注意強風時段駕車",
-                weatherSuit: "僅限晴天（大風/雨天不宜）",
-                desc: "國際級夕陽絕景，適合全家拍團體大合照。",
-                backupId: "spot_tuku_walk",
-                backupName: "土庫里雜貨散策",
-                backupReason: "海邊風大或下雨時，一鍵切換至室內或質感街區"
-            },
-
-            // ================= DAY 2：嘉義大林/市區/美學線 =================
-            {
-                id: "spot_jourdeness_castle",
-                name: "佐登妮絲城堡 (D2美學首選)",
-                category: "DAY 2 美學",
-                time: "2 - 2.5 小時",
-                locationShort: "嘉義縣大林鎮",
-                address: "嘉義縣大林鎮大埔美園區三路15號",
-                openHours: "09:00 – 19:00",
-                phone: "04-2369-6266",
-                icon: "fa-chess-rook",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=佐登妮絲城堡",
-                seniorEval: "巴洛克歐式建築與噴泉非常氣派，但戶外大理石折射強、遮蔽少",
-                kidEval: "華麗穹頂與城堡廣場拍照效果好，視覺震撼",
-                transport: "園區設有專屬大型停車場，4台車好停",
-                weatherSuit: "室內展區有冷氣，但戶外極度曝曬",
-                desc: "商業推銷感較重。建議傍晚 16:00 後入場避開烈日與頂光，拍人像更美。可與蓋婭莊園進行二選一。",
-                backupId: "spot_gaia_manor",
-                backupName: "蓋婭莊園",
-                backupReason: "若想看同風格美學園區或避開人潮，可切換至蓋婭莊園"
-            },
-            {
-                id: "spot_oulowo_castle",
-                name: "歐樂沃築夢城堡 (D2大林中繼)",
-                category: "DAY 2 美學",
-                time: "0.5 - 1 小時",
-                locationShort: "嘉義縣大林鎮",
-                address: "嘉義縣大林鎮大埔美園區九路12號",
-                openHours: "09:00 – 17:30",
-                phone: "05-295-6588",
-                icon: "fa-cookie-bite",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=歐樂沃築夢城堡",
-                seniorEval: "室內動線尚可，可作為去阿里山或大林途中的高級休憩站點",
-                kidEval: "蒸汽龐克風格童話城堡，拍照打卡與巧克力主題明確",
-                transport: "大埔美園區道路寬敞，4台車輕鬆停放",
-                weatherSuit: "室內冷氣為主（躲太陽聖地）",
-                desc: "動線採「先拍照後強迫購物」模式，若不買伴手禮約 40 分鐘即逛完。蒸汽龐克童話風格極具特色。",
-                backupId: "spot_meatball_planet",
-                backupName: "丸聚星球",
-                backupReason: "若遇人潮過多，可轉往同在大埔美園區的丸聚星球"
-            },
-            {
-                id: "spot_gaia_manor",
-                name: "蓋婭莊園 (D2大林歐風備選)",
-                category: "DAY 2 美學",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義縣大林鎮",
-                address: "嘉義縣大林鎮大埔美園區七路18號",
-                openHours: "08:30 – 17:30",
-                phone: "0910-856-299",
-                icon: "fa-chess-king",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=蓋婭莊園",
-                seniorEval: "希臘純白宮殿，美妝保養主題，適合走走停停散步",
-                kidEval: "純白建築與許願池打卡，美感拍照點多",
-                transport: "周邊停車方便，4台車無壓力",
-                weatherSuit: "戶外極亮曝曬（自帶反光板效應），需攜帶陽傘",
-                desc: "與佐登妮絲城堡鄰近且同質性高，建議兩者「二選一」即可，避免審美疲勞。",
-                backupId: "spot_jourdeness_castle",
-                backupName: "佐登妮絲城堡",
-                backupReason: "若想看更氣派的巴洛克噴泉城堡，可切換至佐登妮絲"
-            },
-            {
-                id: "spot_showa_18",
-                name: "昭和十八J18 (嘉義市史蹟資料館)",
-                category: "DAY 2 美學",
-                time: "1 小時",
-                locationShort: "嘉義市東區",
-                address: "嘉義市東區公園街42號 (嘉義公園內)",
-                openHours: "09:00 – 17:00 (週一公休)",
-                phone: "05-277-0518",
-                icon: "fa-torii-gate",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=昭和十八J18",
-                seniorEval: "日式檜木建築與神社氛圍，典雅悠閒適合漫步",
-                kidEval: "和服/浴衣換裝體驗，拍照打卡效果極佳",
-                transport: "需停放嘉義公園周邊停車場後步行入園",
-                weatherSuit: "公園樹林多，小黑蚊非常猖狂，必須做足防蚊",
-                desc: "室內空間不大，假日容易喧鬧，建議平日上午造訪體驗禪意與浴衣體驗。",
-                backupId: "spot_chayi_art_museum",
-                backupName: "嘉義市立美術館",
-                backupReason: "若戶外蚊蟲較多，可切換至市區全冷氣美術館"
-            },
-            {
-                id: "spot_happy_hill",
-                name: "幸福山丘 HappyHill (D2午茶選品)",
-                category: "DAY 2 美學",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義市東區",
-                address: "嘉義市東區東義路566巷52-1號",
-                openHours: "10:00 – 18:00 (週一、二公休)",
-                phone: "05-276-5080",
-                icon: "fa-tree",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=幸福山丘",
-                seniorEval: "綠意山丘與貨櫃屋咖啡廳，環境自然舒適",
-                kidEval: "大片綠草皮與特色甜點麵包，放鬆點心時間",
-                transport: "園區入口山路狹窄且陡峭，4台車會車需特別注意",
-                weatherSuit: "晴天戶外+室內冷氣咖啡廳",
-                desc: "吐司與麵包非常熱門，下午 15:00 後容易完售，想吃麵包建議中午前抵達。",
-                backupId: "spot_hoyahoyo_brunch",
-                backupName: "hoyahoyo 早午餐",
-                backupReason: "若山路車位停滿，可切換至忠孝路質感早午餐"
-            },
-            {
-                id: "spot_taiping_suspension_bridge",
-                name: "太平雲梯 & 空氣圖書館 (D2/阿里山線)",
-                category: "DAY 2 美學",
-                time: "2 - 3 小時",
-                locationShort: "嘉義縣梅山鄉",
-                address: "嘉義縣梅山鄉太平村下坑仔5號",
-                openHours: "09:00 – 16:30 (週三公休，需預約門票)",
-                phone: "05-257-1215",
-                icon: "fa-bridge",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=太平雲梯",
-                seniorEval: "雲梯景色壯麗；但雲之南道步道有上坡階梯，需評估長輩膝蓋負擔",
-                kidEval: "高空吊橋視野極具刺激感與挑戰性",
-                transport: "梅山 36 彎考量駕駛技術與備妥暈車藥，停車場假日需排隊",
-                weatherSuit: "山上手腳宜穿平底鞋；午後極易起霧；空氣圖書館為半開放式無冷氣",
-                desc: "務必排在「上午 11:00 前」抵達以避開大霧；可順遊空氣圖書館享用植物系餐點。",
-                backupId: "spot_alishan_forest",
-                backupName: "阿里山國家森林遊樂區",
-                backupReason: "若想直攻高海拔巨木群，可繼續往阿里山方向前進"
-            },
-            {
-                id: "spot_chayi_art_museum",
-                name: "嘉義市立美術館 (D2市區美學)",
-                category: "DAY 2 美學",
-                time: "1.5 - 2 小時",
-                locationShort: "嘉義市西區",
-                address: "嘉義市西區廣寧街101號",
-                openHours: "09:00 – 17:00 (週一公休)",
-                phone: "05-227-0016",
-                icon: "fa-palette",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=嘉義市立美術館",
-                seniorEval: "新舊建築交融，館內設有電梯與空調，平緩好走",
-                kidEval: "建築光影美感十足，庭院適合大合照",
-                transport: "位於嘉義車站旁，周邊有收費停車場",
-                weatherSuit: "晴雨皆宜（全館冷氣）",
-                desc: "舊菸酒公賣局改建，市區極具代表性的藝術文化地標。",
-                backupId: "spot_npm_south",
-                backupName: "故宮南院 兒童創意中心",
-                backupReason: "可切換至太保大型園區觀展與體驗"
-            },
-            {
-                id: "spot_hoyahoyo_brunch",
-                name: "hoyahoyo 早午餐 (D2晨間美食)",
-                category: "DAY 2 美學",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義市東區",
-                address: "嘉義市東區忠孝路357號",
-                openHours: "08:30 – 16:00 (週三公休)",
-                phone: "05-275-1011",
-                icon: "fa-utensils",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=hoyahoyo+嘉義",
-                seniorEval: "餐點精緻豐盛，環境明亮",
-                kidEval: "特色蛋餅、漢堡與造型牛奶極具人氣",
-                transport: "忠孝路周邊需先搜尋收費停車場",
-                weatherSuit: "晴雨皆宜（室內用餐）",
-                desc: "忠孝路質感早午餐，開啟嘉義市區美學之旅的起點。",
-                backupId: "spot_happy_hill",
-                backupName: "幸福山丘",
-                backupReason: "若內用客滿，可切換至幸福山丘享用甜點麵包"
-            },
-            {
-                id: "spot_npm_south",
-                name: "故宮南院 & 兒童創意中心 (D2/D3親子必訪)",
-                category: "DAY 2 美學",
-                time: "2.5 - 3 小時",
-                locationShort: "嘉義縣太保市",
-                address: "嘉義縣太保市故宮大道888號",
-                openHours: "09:00 – 17:00 (週一休館)",
-                phone: "05-362-0777",
-                icon: "fa-landmark",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=國立故宮博物院南部院區",
-                seniorEval: "國家級展覽與無障礙設施，空間極為寬敞快適",
-                kidEval: "兒童創意中心免門票！沙池、噴水區與投影互動遊戲放電滿分",
-                transport: "園區備有大型停車場，可搭乘五分車往返蒜頭糖廠",
-                weatherSuit: "晴雨皆宜（戶外水沙區限晴天，室內全冷氣）",
-                desc: "結合國際級文物展覽與兒童專屬遊戲空間，傍晚戶外戲水玩沙最佳據點。",
-                backupId: "spot_lengyan_co2",
-                backupName: "冷研碳索館 (乾冰觀光工廠)",
-                backupReason: "若戶外太熱或降雨，可直接切換至附近的冷研碳索館看乾冰瀑布"
-            },
-
-            // ================= DAY 3：萌寵農創/山海避暑線 =================
-            {
-                id: "spot_three_pigs",
-                name: "三隻小豬觀光農場 (D3萌寵放電)",
-                category: "DAY 3 萌寵農創",
-                time: "2 小時",
-                locationShort: "嘉義縣民雄鄉",
-                address: "嘉義縣民雄鄉民新路369號",
-                openHours: "09:00 – 18:00 (週二公休)",
-                phone: "05-226-1008",
-                icon: "fa-paw",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=三隻小豬觀光農場",
-                seniorEval: "步道平緩有座椅，但假日人潮極度擁擠、稍微嘈雜",
-                kidEval: "放電天堂！有水豚、浣熊等動物，加上大草皮與溜滑梯",
-                transport: "近民雄交流道，假日停車場易滿，4台車需預留尋找車位時間",
-                weatherSuit: "戶外農場為主，注意防曬，部分區域稍微有農場氣味",
-                desc: "建議平日上午造訪；若假日前往請先備妥門票，並預留停車尋找時間。",
-                backupId: "spot_zhulu_love_prairie",
-                backupName: "逐鹿傳說梅花鹿園 & 愛情大草原",
-                backupReason: "若三隻小豬停車場爆滿，可切換至觸口大草原餵鹿"
-            },
-            {
-                id: "spot_zhulu_love_prairie",
-                name: "逐鹿傳說梅花鹿園 & 旺萊山愛情大草原",
-                category: "DAY 3 萌寵農創",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義縣番路鄉",
-                address: "嘉義縣番路鄉觸口村車埕7-11號 (阿里山國家風景區觸口遊客中心旁)",
-                openHours: "09:00 – 17:00",
-                phone: "05-259-1585",
-                icon: "fa-hippo",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=旺萊山愛情大草原",
-                seniorEval: "在大草原室內試吃鳳梨酥、吹冷氣喝茶休息極為舒適",
-                kidEval: "近距離餵食梅花鹿與大草皮奔跑放電",
-                transport: "觸口遊客中心旁，設有廣大免費停車場，4台車極好停",
-                weatherSuit: "大草原完全無遮蔽物，正中午極度曝曬，注意防曬",
-                desc: "作為前往阿里山山路前的「高級休息站」極佳，有鳳梨酥試吃與餵鹿體驗。",
-                backupId: "spot_three_pigs",
-                backupName: "三隻小豬觀光農場",
-                backupReason: "若想看更多小型萌寵動物，可切換至三隻小豬"
-            },
-            {
-                id: "spot_chiayi_insects",
-                name: "新嘉大昆蟲館 (D3室內生態)",
-                category: "DAY 3 萌寵農創",
-                time: "1 小時",
-                locationShort: "嘉義市東區",
-                address: "嘉義市東區學府路300號 (嘉義大學蘭潭校區)",
-                openHours: "09:30 – 17:30 (週一、二公休)",
-                phone: "05-275-0360",
-                icon: "fa-bugs",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=新嘉大昆蟲館",
-                seniorEval: "步道平緩和緩，室內空間舒適無負擔",
-                kidEval: "球型溫室天空步道被蝴蝶環繞，昆蟲標本豐富",
-                transport: "嘉義大學蘭潭校區周邊好停車，4台車方便",
-                weatherSuit: "全室內溫室館，最佳避暑/雨天備案",
-                desc: "場館不大約 1 小時內結束，適合搭配旁邊嘉義公園或植物園一起規劃。",
-                backupId: "spot_aimumu_wood",
-                backupName: "愛木村觀光工廠",
-                backupReason: "若想切換至木作 DIY 體驗，可轉往愛木村"
-            },
-            {
-                id: "spot_aimumu_wood",
-                name: "愛木村觀光工廠 (D3木作體驗)",
-                category: "DAY 3 萌寵農創",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義市東區",
-                address: "嘉義市東區文化路909-3號",
-                openHours: "09:00 – 17:30 (週二公休)",
-                phone: "05-232-2441",
-                icon: "fa-tree",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=愛木村觀光工廠",
-                seniorEval: "充滿檜木香氣，沉浸感好，適合長輩慢逛",
-                kidEval: "設有互動遊戲與 DIY 木作體驗，小朋友很愛",
-                transport: "附設停車場，4台車停放方便",
-                weatherSuit: "鐵皮屋結構，盛夏中午略顯悶熱",
-                desc: "木作 DIY 需額外付費，若不體驗 DIY 純看展區會較快結束。充滿檜木香氣。",
-                backupId: "spot_chiayi_insects",
-                backupName: "新嘉大昆蟲館",
-                backupReason: "若室內悶熱，可切換至全冷氣的昆蟲溫室館"
-            },
-            {
-                id: "spot_alishan_forest",
-                name: "阿里山國家森林遊樂區 (D3避暑深度遊)",
-                category: "DAY 3 萌寵農創",
-                time: "半天至一日",
-                locationShort: "嘉義縣阿里山鄉",
-                address: "嘉義縣阿里山鄉中正村59號",
-                openHours: "24 小時開放",
-                phone: "05-267-9917",
-                icon: "fa-mountain-sun",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=阿里山國家森林遊樂區",
-                seniorEval: "巨木步道芬多精極佳；強烈建議搭乘「園區電動遊園車」保護膝蓋",
-                kidEval: "搭乘復古森林小火車體驗豐富",
-                transport: "山路蜿蜒車程長，門口停車位有限，4台車需早到",
-                weatherSuit: "高海拔涼爽避暑，午後易有霧，需備禦寒衣物",
-                desc: "園區餐點品質普通且貴，建議自備零食麵包。可搭乘小火車與電動車玩賞巨木群。",
-                backupId: "spot_taiping_suspension_bridge",
-                backupName: "太平雲梯",
-                backupReason: "若不想走太遠山路，可於半山腰切換至梅山太平雲梯"
-            },
-            {
-                id: "spot_meatball_planet",
-                name: "丸聚星球 (D3觀光工廠)",
-                category: "DAY 3 萌寵農創",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義縣大林鎮",
-                address: "嘉義縣大林鎮大埔美園區二路29號",
-                openHours: "09:30 – 17:30 (週三公休)",
-                phone: "05-295-0200",
-                icon: "fa-rocket",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=丸聚星球",
-                seniorEval: "冷氣極強，能免費試吃熱騰騰貢丸，長輩最愛的在地好滋味",
-                kidEval: "超酷的宇宙星球造景與互動遊戲，像在太空站探險一樣有趣",
-                transport: "位於大埔美園區，車位多，15人大團體上下車安全方便",
-                weatherSuit: "晴雨皆宜（全室內，完全不怕日曬雨淋）",
-                desc: "嘉楠食品打造的貢丸觀光工廠，充滿宇宙科技感，免費試吃且寓教於樂。",
-                backupId: "spot_oulowo_castle",
-                backupName: "歐樂沃築夢城堡",
-                backupReason: "若想吃甜點下午茶，可直接切換至附近的巧克力城堡"
-            },
-            {
-                id: "spot_lengyan_co2",
-                name: "冷研碳索館 (D3避暑體驗)",
-                category: "DAY 3 萌寵農創",
-                time: "1.5 - 2 小時",
-                locationShort: "嘉義縣鹿草鄉",
-                address: "嘉義縣鹿草鄉馬愁後園區一路38號",
-                openHours: "09:30 – 16:30 (週一、二公休)",
-                phone: "05-362-0606",
-                icon: "fa-flask",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=冷研碳索館",
-                seniorEval: "室內全冷氣環境，沉浸式科技實驗室輕鬆參觀",
-                kidEval: "乾冰瀑布（11:00/13:00/15:00）、泡泡樹與熔岩燈極具神奇吸引力",
-                transport: "設有專用停車場，門票200元（可折抵50元）",
-                weatherSuit: "晴雨皆宜（100% 室內全冷氣避暑首選）",
-                desc: "全台首座 CO2 主題觀光工廠，超酷乾冰瀑布與泡泡設施，避暑放電絕佳景點。",
-                backupId: "spot_three_pigs",
-                backupName: "三隻小豬觀光農場",
-                backupReason: "若想切換至戶外動物互動路線可隨時切換"
-            },
-
-            // ================= DAY 4：北返中繼/生態與選品 =================
-            {
-                id: "spot_pinhuang_coffee",
-                name: "品皇咖啡觀光工廠 (D4北返中繼)",
-                category: "DAY 4 北返中繼",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義縣水上鄉",
-                address: "嘉義縣水上鄉大崙村155號",
-                openHours: "08:00 – 17:00",
-                phone: "05-371-3299",
-                icon: "fa-mug-hot",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=品皇咖啡觀光工廠新館",
-                seniorEval: "長輩天堂！可無限免費試喝各種咖啡與奶茶，且動線平緩寬敞",
-                kidEval: "門口巨無霸咖啡杯可拍趣味合照，館內有熱鬧市集可逛",
-                transport: "全新廠區佔地極廣，遊覽車與小客車停車場極大，4車完全沒問題",
-                weatherSuit: "晴雨皆宜（躲太陽/避雨的絕佳休息站）",
-                desc: "全新落成的咖啡觀光工廠，免門票且提供大方試飲，是北返或南下最佳的中繼休息站。",
-                backupId: "spot_white_toothpaste",
-                backupName: "白人牙膏觀光工廠",
-                backupReason: "若想看古蹟或讓小孩吃冰棒，可切換至白人牙膏"
-            },
-            {
-                id: "spot_beetle_park",
-                name: "東勢獨角仙生態公園 (D4北返戶外)",
-                category: "DAY 4 北返中繼",
-                time: "1.5 - 2 小時",
-                locationShort: "臺中市東勢區",
-                address: "臺中市東勢區上新里中新街西新巷70號",
-                openHours: "24 小時開放 (戶外公園)",
-                phone: "04-2587-2106",
-                icon: "fa-bug",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=臺中市東勢區上新里中新街西新巷70號",
-                seniorEval: "設有遊戲場溫濕度告示牌，樹蔭豐富好陪伴看顧",
-                kidEval: "分齡溜滑梯、戲水區極致放電與獨角仙撫育區",
-                transport: "周邊方便 4 台車停放，適合東勢/石岡順遊",
-                weatherSuit: "晴天戶外首選，請務必幫小朋友多帶一套替換衣服",
-                desc: "獨角仙主題公園！設有獨角仙撫育區、不同速率溜滑梯與戲水區，設有溫濕度告示牌。",
-                backupId: "spot_bear_harbor",
-                backupName: "寶熊漁樂碼頭",
-                backupReason: "若遇到降雨或高溫，可切換至台中潭子室內觀光工廠"
-            },
-
-            // ================= 備案專區：質感與室內備案 =================
-            {
-                id: "spot_white_toothpaste",
-                name: "白人牙膏觀光工廠 & 將軍府 (雨天神級備案)",
-                category: "☔ 備案專區",
-                time: "1.5 - 2 小時",
-                locationShort: "嘉義縣水上鄉",
-                address: "嘉義縣水上鄉龍德村十一指厝144號",
-                openHours: "09:00 – 17:00",
-                phone: "05-260-5858",
-                icon: "fa-tooth",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=白人牙膏觀光工廠",
-                seniorEval: "把整座清朝將軍府搬進室內，長輩對古蹟建築絕對歎為觀止",
-                kidEval: "可以吃免費冰棒，空間大可走動，還能體驗大清朝服飾變裝",
-                transport: "擁有超大型免費停車場，非常適合多車家族大團體同時停放",
-                weatherSuit: "晴雨皆宜（神級雨天備案，全區有遮蔽）",
-                desc: "不僅賣牙膏，更是把百年將軍府重現的超狂觀光工廠，提供免費吃冰喝咖啡，是最強雨天備案。",
-                backupId: "spot_pinhuang_coffee",
-                backupName: "品皇咖啡觀光工廠",
-                backupReason: "若看膩古蹟想純購物買伴手禮，可切換至附近的品皇咖啡"
-            },
-            {
-                id: "spot_chiayi_old_prison",
-                name: "嘉義舊監獄博物館 (室內歷史備案)",
-                category: "☔ 備案專區",
-                time: "1 - 1.5 小時",
-                locationShort: "嘉義市東區",
-                address: "嘉義市東區維新路140號",
-                openHours: "09:30 – 15:00 (配合定點導覽場次，週一公休)",
-                phone: "05-278-9242",
-                icon: "fa-building-columns",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=嘉義舊監獄",
-                seniorEval: "日治時期國定古蹟建築，歷史沉浸感強",
-                kidEval: "牢房體驗新鮮，但內容較為嚴肅靜態",
-                transport: "市區路邊或周邊收費停車場",
-                weatherSuit: "牢房區域完全無冷氣，夏天非常悶熱",
-                desc: "不能自由亂逛，必須配合固定定點導覽場次走動。不適合過度靜不下來的小小孩。",
-                backupId: "spot_showa_18",
-                backupName: "昭和十八J18",
-                backupReason: "若導覽場次尚未開始，可轉往附近的昭和十八J18"
-            },
-            {
-                id: "spot_tuku_walk",
-                name: "土庫里雜貨散策 (D1/D4質感備案)",
-                category: "☔ 備案專區",
-                time: "1.5 - 2 小時",
-                locationShort: "臺中市西區土庫里",
-                address: "臺中市西區土庫里 (五權西六街 / 美村路一段周邊)",
-                openHours: "13:00 – 19:00 (依各小店為準)",
-                phone: "無統一電話 (各獨立選品店)",
-                icon: "fa-store",
-                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=台中市西區土庫里",
-                seniorEval: "懷舊唱片行與古董選品，巷弄平緩好漫步",
-                kidEval: "特色雜貨與食器小店，適合青年與長輩分組走逛歇腳",
-                transport: "巷弄窄，4台車請停放忠明南路/美村路收費停車場後步行進入",
-                weatherSuit: "晴雨皆宜（雨天可於各選品店與咖啡廳間穿梭）",
-                desc: "精選感傷唱片行、明星古董、CameZa、味兒食器與橘豆等 20+ 特色選品小店。",
-                backupId: "spot_mitsui_outlet",
-                backupName: "MITSUI OUTLET PARK 台中港",
-                backupReason: "若家族成員想尋找大空間好停車的商場，可切換至此"
-            }
+            // DAY 1
+            { id: "spot_bear_harbor", name: "寶熊漁樂碼頭 (D1上午)", category: "DAY 1 海線", time: "2 小時", locationShort: "臺中市潭子區", address: "臺中市潭子區中山路三段11號", openHours: "10:00 – 17:30 (週二、三公休)", phone: "04-3505-6115", icon: "fa-fish", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=寶熊漁樂碼頭", seniorEval: "室內平緩、有座椅與冷氣，非常舒適", kidEval: "釣魚故事館與巨型釣魚機，放電指數高", transport: "附設專用停車場，4台車好停", weatherSuit: "晴雨皆宜（室內館）", desc: "全台唯一釣具主題觀光工廠，適合家族作為第一站室內景點。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若想切換至質感街區漫步，可轉往土庫里" },
+            { id: "spot_mitsui_outlet", name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)", category: "DAY 1 海線", time: "3-4 小時", locationShort: "臺中市梧棲區", address: "臺中市梧棲區臺灣大道十段168號", openHours: "11:00 – 21:30 (假日 10:30 開門)", phone: "04-2521-8999", icon: "fa-bag-shopping", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港", seniorEval: "美食街選擇多，有室內休息區與電梯", kidEval: "摩天輪與海景景觀，空間寬敞", transport: "大型免費停車場，15人4車無壓力", weatherSuit: "晴雨皆宜（購物中心）", desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若不想逛大型商場，可切換至文青選品小店路線" },
+            { id: "spot_gaomei_wetland", name: "高美濕地木棧道 (D1傍晚 Plan A)", category: "DAY 1 海線", time: "1.5 小時", locationShort: "臺中市清水區", address: "臺中市清水區美堤街", openHours: "09:00 – 18:00 (開放時間依潮汐時間調整)", phone: "04-2656-5810", icon: "fa-water", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=高美濕地木棧道", seniorEval: "夕陽美景絕佳，需注意海風與海風吹拂溫度", kidEval: "潮間帶觀察螃蟹與彈塗魚，自然生態豐富", transport: "周邊有收費停車場，注意強風時段駕車", weatherSuit: "僅限晴天（大風/雨天不宜）", desc: "國際級夕陽絕景，適合全家拍團體大合照。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "海邊風大或下雨時，一鍵切換至室內或質感街區" },
+            // DAY 2
+            { id: "spot_jourdeness_castle", name: "佐登妮絲城堡 (D2美學首選)", category: "DAY 2 美學", time: "2 - 2.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區三路15號", openHours: "09:00 – 19:00", phone: "04-2369-6266", icon: "fa-chess-rook", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=佐登妮絲城堡", seniorEval: "巴洛克歐式建築與噴泉非常氣派，但戶外大理石折射強、遮蔽少", kidEval: "華麗穹頂與城堡廣場拍照效果好，視覺震撼", transport: "園區設有專屬大型停車場，4台車好停", weatherSuit: "室內展區有冷氣，但戶外極度曝曬", desc: "商業推銷感較重。建議傍晚 16:00 後入場避開烈日與頂光，拍人像更美。可與蓋婭莊園進行二選一。", backupId: "spot_gaia_manor", backupName: "蓋婭莊園", backupReason: "若想看同風格美學園區或避開人潮，可切換至蓋婭莊園" },
+            { id: "spot_oulowo_castle", name: "歐樂沃築夢城堡 (D2大林中繼)", category: "DAY 2 美學", time: "0.5 - 1 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區九路12號", openHours: "09:00 – 17:30", phone: "05-295-6588", icon: "fa-cookie-bite", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=歐樂沃築夢城堡", seniorEval: "室內動線尚可，可作為去阿里山或大林途中的高級休憩站點", kidEval: "蒸汽龐克風格童話城堡，拍照打卡與巧克力主題明確", transport: "大埔美園區道路寬敞，4台車輕鬆停放", weatherSuit: "室內冷氣為主（躲太陽聖地）", desc: "動線採「先拍照後強迫購物」模式，若不買伴手禮約 40 分鐘即逛完。蒸汽龐克童話風格極具特色。", backupId: "spot_meatball_planet", backupName: "丸聚星球", backupReason: "若遇人潮過多，可轉往同在大埔美園區的丸聚星球" },
+            { id: "spot_gaia_manor", name: "蓋婭莊園 (D2大林歐風備選)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區七路18號", openHours: "08:30 – 17:30", phone: "0910-856-299", icon: "fa-chess-king", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=蓋婭莊園", seniorEval: "希臘純白宮殿，美妝保養主題，適合走走停停散步", kidEval: "純白建築與許願池打卡，美感拍照點多", transport: "周邊停車方便，4台車無壓力", weatherSuit: "戶外極亮曝曬（自帶反光板效應），需攜帶陽傘", desc: "與佐登妮絲城堡鄰近且同質性高，建議兩者「二選一」即可，避免審美疲勞。", backupId: "spot_jourdeness_castle", backupName: "佐登妮絲城堡", backupReason: "若想看更氣派的巴洛克噴泉城堡，可切換至佐登妮絲" },
+            { id: "spot_showa_18", name: "昭和十八J18 (嘉義市史蹟資料館)", category: "DAY 2 美學", time: "1 小時", locationShort: "嘉義市東區", address: "嘉義市東區公園街42號 (嘉義公園內)", openHours: "09:00 – 17:00 (週一公休)", phone: "05-277-0518", icon: "fa-torii-gate", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=昭和十八J18", seniorEval: "日式檜木建築與神社氛圍，典雅悠閒適合漫步", kidEval: "和服/浴衣換裝體驗，拍照打卡效果極佳", transport: "需停放嘉義公園周邊停車場後步行入園", weatherSuit: "公園樹林多，小黑蚊非常猖狂，必須做足防蚊", desc: "室內空間不大，假日容易喧鬧，建議平日上午造訪體驗禪意與浴衣體驗。", backupId: "spot_chayi_art_museum", backupName: "嘉義市立美術館", backupReason: "若戶外蚊蟲較多，可切換至市區全冷氣美術館" },
+            { id: "spot_happy_hill", name: "幸福山丘 HappyHill (D2午茶選品)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉義市東區東義路566巷52-1號", openHours: "10:00 – 18:00 (週一、二公休)", phone: "05-276-5080", icon: "fa-tree", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=幸福山丘", seniorEval: "綠意山丘與貨櫃屋咖啡廳，環境自然舒適", kidEval: "大片綠草皮與特色甜點麵包，放鬆點心時間", transport: "園區入口山路狹窄且陡峭，4台車會車需特別注意", weatherSuit: "晴天戶外+室內冷氣咖啡廳", desc: "吐司與麵包非常熱門，下午 15:00 後容易完售，想吃麵包建議中午前抵達。", backupId: "spot_hoyahoyo_brunch", backupName: "hoyahoyo 早午餐", backupReason: "若山路車位停滿，可切換至忠孝路質感早午餐" },
+            { id: "spot_taiping_suspension_bridge", name: "太平雲梯 & 空氣圖書館 (D2/阿里山線)", category: "DAY 2 美學", time: "2 - 3 小時", locationShort: "嘉義縣梅山鄉", address: "嘉義縣梅山鄉太平村下坑仔5號", openHours: "09:00 – 16:30 (週三公休，需預約門票)", phone: "05-257-1215", icon: "fa-bridge", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=太平雲梯", seniorEval: "雲梯景色壯麗；但雲之南道步道有上坡階梯，需評估長輩膝蓋負擔", kidEval: "高空吊橋視野極具刺激感與挑戰性", transport: "梅山 36 彎考量駕駛技術與備妥暈車藥，停車場假日需排隊", weatherSuit: "山上手腳宜穿平底鞋；午後極易起霧；空氣圖書館為半開放式無冷氣", desc: "務必排在「上午 11:00 前」抵達以避開大霧；可順遊空氣圖書館享用植物系餐點。", backupId: "spot_alishan_forest", backupName: "阿里山國家森林遊樂區", backupReason: "若想直攻高海拔巨木群，可繼續往阿里山方向前進" },
+            { id: "spot_chayi_art_museum", name: "嘉義市立美術館 (D2市區美學)", category: "DAY 2 美學", time: "1.5 - 2 小時", locationShort: "嘉義市西區", address: "嘉義市西區廣寧街101號", openHours: "09:00 – 17:00 (週一公休)", phone: "05-227-0016", icon: "fa-palette", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=嘉義市立美術館", seniorEval: "新舊建築交融，館內設有電梯與空調，平緩好走", kidEval: "建築光影美感十足，庭院適合大合照", transport: "位於嘉義車站旁，周邊有收費停車場", weatherSuit: "晴雨皆宜（全館冷氣）", desc: "舊菸酒公賣局改建，市區極具代表性的藝術文化地標。", backupId: "spot_npm_south", backupName: "故宮南院 兒童創意中心", backupReason: "可切換至太保大型園區觀展與體驗" },
+            { id: "spot_hoyahoyo_brunch", name: "hoyahoyo 早午餐 (D2晨間美食)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉義市東區忠孝路357號", openHours: "08:30 – 16:00 (週三公休)", phone: "05-275-1011", icon: "fa-utensils", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=hoyahoyo+嘉義", seniorEval: "餐點精緻豐盛，環境明亮", kidEval: "特色蛋餅、漢堡與造型牛奶極具人氣", transport: "忠孝路周邊需先搜尋收費停車場", weatherSuit: "晴雨皆宜（室內用餐）", desc: "忠孝路質感早午餐，開啟嘉義市區美學之旅的起點。", backupId: "spot_happy_hill", backupName: "幸福山丘", backupReason: "若內用客滿，可切換至幸福山丘享用甜點麵包" },
+            { id: "spot_npm_south", name: "故宮南院 & 兒童創意中心 (D2/D3親子必訪)", category: "DAY 2 美學", time: "2.5 - 3 小時", locationShort: "嘉義縣太保市", address: "嘉義縣太保市故宮大道888號", openHours: "09:00 – 17:00 (週一休館)", phone: "05-362-0777", icon: "fa-landmark", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=國立故宮博物院南部院區", seniorEval: "國家級展覽與無障礙設施，空間極為寬敞快適", kidEval: "兒童創意中心免門票！沙池、噴水區與投影互動遊戲放電滿分", transport: "園區備有大型停車場，可搭乘五分車往返蒜頭糖廠", weatherSuit: "晴雨皆宜（戶外水沙區限晴天，室內全冷氣）", desc: "結合國際級文物展覽與兒童專屬遊戲空間，傍晚戶外戲水玩沙最佳據點。", backupId: "spot_lengyan_co2", backupName: "冷研碳索館 (乾冰觀光工廠)", backupReason: "若戶外太熱或降雨，可直接切換至附近的冷研碳索館看乾冰瀑布" },
+            // DAY 3
+            { id: "spot_three_pigs", name: "三隻小豬觀光農場 (D3萌寵放電)", category: "DAY 3 萌寵農創", time: "2 小時", locationShort: "嘉義縣民雄鄉", address: "嘉義縣民雄鄉民新路369號", openHours: "09:00 – 18:00 (週二公休)", phone: "05-226-1008", icon: "fa-paw", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=三隻小豬觀光農場", seniorEval: "步道平緩有座椅，但假日人潮極度擁擠、稍微嘈雜", kidEval: "放電天堂！有水豚、浣熊等動物，加上大草皮與溜滑梯", transport: "近民雄交流道，假日停車場易滿，4台車需預留尋找車位時間", weatherSuit: "戶外農場為主，注意防曬，部分區域稍微有農場氣味", desc: "建議平日上午造訪；若假日前往請先備妥門票，並預留停車尋找時間。", backupId: "spot_zhulu_love_prairie", backupName: "逐鹿傳說梅花鹿園 & 愛情大草原", backupReason: "若三隻小豬停車場爆滿，可切換至觸口大草原餵鹿" },
+            { id: "spot_zhulu_love_prairie", name: "逐鹿傳說梅花鹿園 & 旺萊山愛情大草原", category: "DAY 3 萌寵農創", time: "1 - 1.5 小時", locationShort: "嘉義縣番路鄉", address: "嘉義縣番路鄉觸口村車埕7-11號 (阿里山國家風景區觸口遊客中心旁)", openHours: "09:00 – 17:00", phone: "05-259-1585", icon: "fa-hippo", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=旺萊山愛情大草原", seniorEval: "在大草原室內試吃鳳梨酥、吹冷氣喝茶休息極為舒適", kidEval: "近距離餵食梅花鹿與大草皮奔跑放電", transport: "觸口遊客中心旁，設有廣大免費停車場，4台車極好停", weatherSuit: "大草原完全無遮蔽物，正中午極度曝曬，注意防曬", desc: "作為前往阿里山山路前的「高級休息站」極佳，有鳳梨酥試吃與餵鹿體驗。", backupId: "spot_three_pigs", backupName: "三隻小豬觀光農場", backupReason: "若想看更多小型萌寵動物，可切換至三隻小豬" },
+            { id: "spot_chiayi_insects", name: "新嘉大昆蟲館 (D3室內生態)", category: "DAY 3 萌寵農創", time: "1 小時", locationShort: "嘉義市東區", address: "嘉義市東區學府路300號 (嘉義大學蘭潭校區)", openHours: "09:30 – 17:30 (週一、二公休)", phone: "05-275-0360", icon: "fa-bugs", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=新嘉大昆蟲館", seniorEval: "步道平緩和緩，室內空間舒適無負擔", kidEval: "球型溫室天空步道被蝴蝶環繞，昆蟲標本豐富", transport: "嘉義大學蘭潭校區周邊好停車，4台車方便", weatherSuit: "全室內溫室館，最佳避暑/雨天備案", desc: "場館不大約 1 小時內結束，適合搭配旁邊嘉義公園或植物園一起規劃。", backupId: "spot_aimumu_wood", backupName: "愛木村觀光工廠", backupReason: "若想切換至木作 DIY 體驗，可轉往愛木村" },
+            { id: "spot_aimumu_wood", name: "愛木村觀光工廠 (D3木作體驗)", category: "DAY 3 萌寵農創", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉義市東區文化路909-3號", openHours: "09:00 – 17:30 (週二公休)", phone: "05-232-2441", icon: "fa-tree", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=愛木村觀光工廠", seniorEval: "充滿檜木香氣，沉浸感好，適合長輩慢逛", kidEval: "設有互動遊戲與 DIY 木作體驗，小朋友很愛", transport: "附設停車場，4台車停放方便", weatherSuit: "鐵皮屋結構，盛夏中午略顯悶熱", desc: "木作 DIY 需額外付費，若不體驗 DIY 純看展區會較快結束。充滿檜木香氣。", backupId: "spot_chiayi_insects", backupName: "新嘉大昆蟲館", backupReason: "若室內悶熱，可切換至全冷氣的昆蟲溫室館" },
+            { id: "spot_alishan_forest", name: "阿里山國家森林遊樂區 (D3避暑深度遊)", category: "DAY 3 萌寵農創", time: "半天至一日", locationShort: "嘉義縣阿里山鄉", address: "嘉義縣阿里山鄉中正村59號", openHours: "24 小時開放", phone: "05-267-9917", icon: "fa-mountain-sun", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=阿里山國家森林遊樂區", seniorEval: "巨木步道芬多精極佳；強烈建議搭乘「園區電動遊園車」保護膝蓋", kidEval: "搭乘復古森林小火車體驗豐富", transport: "山路蜿蜒車程長，門口停車位有限，4台車需早到", weatherSuit: "高海拔涼爽避暑，午後易有霧，需備禦寒衣物", desc: "園區餐點品質普通且貴，建議自備零食麵包。可搭乘小火車與電動車玩賞巨木群。", backupId: "spot_taiping_suspension_bridge", backupName: "太平雲梯", backupReason: "若不想走太遠山路，可於半山腰切換至梅山太平雲梯" },
+            { id: "spot_meatball_planet", name: "丸聚星球 (D3觀光工廠)", category: "DAY 3 萌寵農創", time: "1 - 1.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區二路29號", openHours: "09:30 – 17:30 (週三公休)", phone: "05-295-0200", icon: "fa-rocket", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=丸聚星球", seniorEval: "冷氣極強，能免費試吃熱騰騰貢丸，長輩最愛的在地好滋味", kidEval: "超酷的宇宙星球造景與互動遊戲，像在太空站探險一樣有趣", transport: "位於大埔美園區，車位多，15人大團體上下車安全方便", weatherSuit: "晴雨皆宜（全室內，完全不怕日曬雨淋）", desc: "嘉楠食品打造的貢丸觀光工廠，充滿宇宙科技感，免費試吃且寓教於樂。", backupId: "spot_oulowo_castle", backupName: "歐樂沃築夢城堡", backupReason: "若想吃甜點下午茶，可直接切換至附近的巧克力城堡" },
+            { id: "spot_lengyan_co2", name: "冷研碳索館 (D3避暑體驗)", category: "DAY 3 萌寵農創", time: "1.5 - 2 小時", locationShort: "嘉義縣鹿草鄉", address: "嘉義縣鹿草鄉馬愁後園區一路38號", openHours: "09:30 – 16:30 (週一、二公休)", phone: "05-362-0606", icon: "fa-flask", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=冷研碳索館", seniorEval: "室內全冷氣環境，沉浸式科技實驗室輕鬆參觀", kidEval: "乾冰瀑布（11:00/13:00/15:00）、泡泡樹與熔岩燈極具神奇吸引力", transport: "設有專用停車場，門票200元（可折抵50元）", weatherSuit: "晴雨皆宜（100% 室內全冷氣避暑首選）", desc: "全台首座 CO2 主題觀光工廠，超酷乾冰瀑布與泡泡設施，避暑放電絕佳景點。", backupId: "spot_three_pigs", backupName: "三隻小豬觀光農場", backupReason: "若想切換至戶外動物互動路線可隨時切換" },
+            // DAY 4
+            { id: "spot_pinhuang_coffee", name: "品皇咖啡觀光工廠 (D4北返中繼)", category: "DAY 4 北返中繼", time: "1 - 1.5 小時", locationShort: "嘉義縣水上鄉", address: "嘉義縣水上鄉大崙村155號", openHours: "08:00 – 17:00", phone: "05-371-3299", icon: "fa-mug-hot", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=品皇咖啡觀光工廠新館", seniorEval: "長輩天堂！可無限免費試喝各種咖啡與奶茶，且動線平緩寬敞", kidEval: "門口巨無霸咖啡杯可拍趣味合照，館內有熱鬧市集可逛", transport: "全新廠區佔地極廣，遊覽車與小客車停車場極大，4車完全沒問題", weatherSuit: "晴雨皆宜（躲太陽/避雨的絕佳休息站）", desc: "全新落成的咖啡觀光工廠，免門票且提供大方試飲，是北返或南下最佳的中繼休息站。", backupId: "spot_white_toothpaste", backupName: "白人牙膏觀光工廠", backupReason: "若想看古蹟或讓小孩吃冰棒，可切換至白人牙膏" },
+            { id: "spot_beetle_park", name: "東勢獨角仙生態公園 (D4北返戶外)", category: "DAY 4 北返中繼", time: "1.5 - 2 小時", locationShort: "臺中市東勢區", address: "臺中市東勢區上新里中新街西新巷70號", openHours: "24 小時開放 (戶外公園)", phone: "04-2587-2106", icon: "fa-bug", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=臺中市東勢區上新里中新街西新巷70號", seniorEval: "設有遊戲場溫濕度告示牌，樹蔭豐富好陪伴看顧", kidEval: "分齡溜滑梯、戲水區極致放電與獨角仙撫育區", transport: "周邊方便 4 台車停放，適合東勢/石岡順遊", weatherSuit: "晴天戶外首選，請務必幫小朋友多帶一套替換衣服", desc: "獨角仙主題公園！設有獨角仙撫育區、不同速率溜滑梯與戲水區，設有溫濕度告示牌。", backupId: "spot_bear_harbor", backupName: "寶熊漁樂碼頭", backupReason: "若遇到降雨或高溫，可切換至台中潭子室內觀光工廠" },
+            // 備案
+            { id: "spot_white_toothpaste", name: "白人牙膏觀光工廠 & 將軍府 (雨天神級備案)", category: "☔ 備案專區", time: "1.5 - 2 小時", locationShort: "嘉義縣水上鄉", address: "嘉義縣水上鄉龍德村十一指厝144號", openHours: "09:00 – 17:00", phone: "05-260-5858", icon: "fa-tooth", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=白人牙膏觀光工廠", seniorEval: "把整座清朝將軍府搬進室內，長輩對古蹟建築絕對歎為觀止", kidEval: "可以吃免費冰棒，空間大可走動，還能體驗大清朝服飾變裝", transport: "擁有超大型免費停車場，非常適合多車家族大團體同時停放", weatherSuit: "晴雨皆宜（神級雨天備案，全區有遮蔽）", desc: "不僅賣牙膏，更是把百年將軍府重現的超狂觀光工廠，提供免費吃冰喝咖啡，是最強雨天備案。", backupId: "spot_pinhuang_coffee", backupName: "品皇咖啡觀光工廠", backupReason: "若看膩古蹟想純購物買伴手禮，可切換至附近的品皇咖啡" },
+            { id: "spot_chiayi_old_prison", name: "嘉義舊監獄博物館 (室內歷史備案)", category: "☔ 備案專區", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉義市東區維新路140號", openHours: "09:30 – 15:00 (配合定點導覽場次，週一公休)", phone: "05-278-9242", icon: "fa-building-columns", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=嘉義舊監獄", seniorEval: "日治時期國定古蹟建築，歷史沉浸感強", kidEval: "牢房體驗新鮮，但內容較為嚴肅靜態", transport: "市區路邊或周邊收費停車場", weatherSuit: "牢房區域完全無冷氣，夏天非常悶熱", desc: "不能自由亂逛，必須配合固定定點導覽場次走動。不適合過度靜不下來的小小孩。", backupId: "spot_showa_18", backupName: "昭和十八J18", backupReason: "若導覽場次尚未開始，可轉往附近的昭和十八J18" },
+            { id: "spot_tuku_walk", name: "土庫里雜貨散策 (D1/D4質感備案)", category: "☔ 備案專區", time: "1.5 - 2 小時", locationShort: "臺中市西區土庫里", address: "臺中市西區土庫里 (五權西六街 / 美村路一段周邊)", openHours: "13:00 – 19:00 (依各小店為準)", phone: "無統一電話 (各獨立選品店)", icon: "fa-store", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=台中市西區土庫里", seniorEval: "懷舊唱片行與古董選品，巷弄平緩好漫步", kidEval: "特色雜貨與食器小店，適合青年與長輩分組走逛歇腳", transport: "巷弄窄，4台車請停放忠明南路/美村路收費停車場後步行進入", weatherSuit: "晴雨皆宜（雨天可於各選品店與咖啡廳間穿梭）", desc: "精選感傷唱片行、明星古董、CameZa、味兒食器與橘豆等 20+ 特色選品小店。", backupId: "spot_mitsui_outlet", backupName: "MITSUI OUTLET PARK 台中港", backupReason: "若家族成員想尋找大空間好停車的商場，可切換至此" }
         ];
 
-        // 全域狀態控制
+        // 全域狀態
         let currentCategory = 'ALL';
         let currentSpot = spots[0];
-        let savedSpotIds = JSON.parse(localStorage.getItem('chiayi_saved_spots') || '[]');
+        let savedSpotIds = [];
 
         // 初始化頁面
         window.onload = () => {
+            initSavedSpotsFromUrlOrStorage();
             renderSidebarSpots();
             renderDetailPanel(currentSpot);
             updateSavedBadge();
             initRadarChart();
         };
 
-        // 輔助函式：返回列表 (手機版專用)
+        // [新增優化 2] 網址參數載入邏輯 (?saved=spot_id1,spot_id2)
+        function initSavedSpotsFromUrlOrStorage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlSaved = urlParams.get('saved');
+            
+            if (urlSaved) {
+                const ids = urlSaved.split(',').filter(id => spots.some(s => s.id === id));
+                if (ids.length > 0) {
+                    savedSpotIds = ids;
+                    localStorage.setItem('chiayi_saved_spots', JSON.stringify(savedSpotIds));
+                    return;
+                }
+            }
+            savedSpotIds = JSON.parse(localStorage.getItem('chiayi_saved_spots') || '[]');
+        }
+
+        // 輔助函式：返回列表 (手機版)
         function backToList() {
             const detailPanel = document.getElementById('detailPanel');
             const listPanel = document.getElementById('listPanel');
+            const mobileBar = document.getElementById('mobileNavBar');
+            
             detailPanel.classList.add('hidden');
             detailPanel.classList.remove('flex');
             listPanel.classList.remove('hidden');
+            mobileBar.classList.add('hidden');
         }
 
         // 分類篩選
@@ -675,20 +248,15 @@
                 }
             });
             renderSidebarSpots();
-            if (window.innerWidth < 768) {
-                backToList();
-            }
+            if (window.innerWidth < 768) backToList();
         }
 
-        // 關鍵字搜尋
+        // 搜尋處理
         function handleSearch() {
             renderSidebarSpots();
-            if (window.innerWidth < 768) {
-                backToList();
-            }
+            if (window.innerWidth < 768) backToList();
         }
 
-        // 判斷區域色彩
         function getSpotRegion(spot) {
             return (spot.locationShort && spot.locationShort.includes('臺中')) ? 'taichung' : 'chiayi';
         }
@@ -716,7 +284,7 @@
                 const isSaved = savedSpotIds.includes(spot.id);
                 const isActive = currentSpot && currentSpot.id === spot.id;
                 const region = getSpotRegion(spot);
-                const iconClass = spot.icon ? spot.icon : "fa-location-dot";
+                const iconClass = spot.icon || "fa-location-dot";
                 const bgGradient = region === 'taichung' ? 'from-sky-900 to-indigo-900 text-sky-300 border-sky-700/50' : 'from-amber-900 to-orange-900 text-amber-300 border-amber-700/50';
 
                 return `
@@ -739,7 +307,7 @@
             }).join('');
         }
 
-        // 點擊選擇景點
+        // 選擇景點
         function selectSpotById(id) {
             const spot = spots.find(s => s.id === id);
             if (spot) {
@@ -749,21 +317,24 @@
                 
                 const detailPanel = document.getElementById('detailPanel');
                 const listPanel = document.getElementById('listPanel');
+                const mobileBar = document.getElementById('mobileNavBar');
+
                 if (window.innerWidth < 768) {
                     listPanel.classList.add('hidden');
                     detailPanel.classList.remove('hidden');
                     detailPanel.classList.add('flex');
+                    mobileBar.classList.remove('hidden');
                     window.scrollTo(0, 0);
                 }
             }
         }
 
-        // 渲染右側詳情面板（含詳細地址、營業時間、聯絡電話）
+        // 渲染詳情頁
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
             const region = getSpotRegion(spot);
-            const iconClass = spot.icon ? spot.icon : "fa-location-dot";
+            const iconClass = spot.icon || "fa-location-dot";
             const bgGradient = region === 'taichung' ? 'from-sky-950 via-indigo-950 to-slate-950' : 'from-amber-950 via-orange-950 to-slate-950';
             
             const seniorText = spot.seniorEval || "適合隨時休息散步";
@@ -771,6 +342,9 @@
             const fullAddress = spot.address || spot.locationShort;
             const openHoursText = spot.openHours || "請洽官方公告";
             const phoneText = spot.phone || "無提供或現場洽詢";
+
+            // [新增優化 1] 更新手機端獨立浮動導航連結
+            document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
 
             detailContainer.innerHTML = `
                 <button onclick="backToList()" class="md:hidden mb-4 px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-xs flex items-center gap-2">
@@ -798,7 +372,6 @@
                     </div>
                 </div>
 
-                <!-- 體驗評語與交通資訊 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
                         <div class="p-2 bg-amber-950 text-amber-400 rounded-lg shrink-0 mt-0.5"><i class="fa-solid fa-user-check"></i></div>
@@ -830,7 +403,6 @@
                     </div>
                 </div>
 
-                <!-- 📍 詳細地址 與 🕒 營業時間、📞 聯絡電話 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
                         <div class="flex items-center space-x-3 min-w-0">
@@ -857,7 +429,6 @@
                     </div>
                 </div>
 
-                <!-- 攻略亮點 -->
                 <div class="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl mb-6">
                     <h3 class="text-sm font-bold text-slate-100 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-lightbulb text-amber-400"></i> 攻略與決策亮點
@@ -887,7 +458,7 @@
             `;
         }
 
-        // 切換收藏狀態
+        // 收藏切換
         function toggleSaveSpot(id) {
             if (savedSpotIds.includes(id)) {
                 savedSpotIds = savedSpotIds.filter(item => item !== id);
@@ -901,12 +472,10 @@
             renderSavedDrawerList();
         }
 
-        // 更新收藏數量 Badge
         function updateSavedBadge() {
             document.getElementById('savedCountBadge').innerText = savedSpotIds.length;
         }
 
-        // 開啟/關閉定案抽屜
         function toggleSavedDrawer() {
             const drawer = document.getElementById('savedDrawer');
             drawer.classList.toggle('translate-x-full');
@@ -915,7 +484,7 @@
             }
         }
 
-        // 渲染定案清單
+        // [新增優化 3] 按天數排序 (Timeline / Day-by-Day View) 渲染定案抽屜
         function renderSavedDrawerList() {
             const savedContainer = document.getElementById('savedList');
             const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
@@ -925,18 +494,51 @@
                 return;
             }
 
-            savedContainer.innerHTML = savedSpots.map(s => `
-                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
-                    <div class="min-w-0 pr-2">
-                        <h5 class="font-bold text-xs text-slate-100 truncate">${s.name}</h5>
-                        <p class="text-[10px] text-slate-400">${s.category} | 停留 ${s.time}</p>
-                    </div>
-                    <button onclick="toggleSaveSpot('${s.id}')" class="text-slate-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                </div>
-            `).join('');
+            // 按天數分組
+            const categoriesOrder = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
+            let html = '';
+
+            categoriesOrder.forEach(cat => {
+                const group = savedSpots.filter(s => s.category === cat);
+                if (group.length > 0) {
+                    html += `
+                        <div class="space-y-2">
+                            <div class="text-[11px] font-extrabold text-sky-400 border-b border-slate-800 pb-1 flex items-center justify-between">
+                                <span>📅 ${cat}</span>
+                                <span class="text-[9px] text-slate-500 font-normal">${group.length} 個景點</span>
+                            </div>
+                            ${group.map(s => `
+                                <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between hover:border-slate-700 transition">
+                                    <div class="min-w-0 pr-2">
+                                        <h5 class="font-bold text-xs text-slate-200 truncate">${s.name}</h5>
+                                        <p class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${s.time}</p>
+                                    </div>
+                                    <button onclick="toggleSaveSpot('${s.id}')" class="text-slate-500 hover:text-red-400 p-1.5 shrink-0"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            });
+
+            savedContainer.innerHTML = html;
         }
 
-        // 複製傳 LINE 訊息（含地址、營業時間與電話資訊）
+        // [新增優化 2] 複製包含參數的分享連結
+        function copyShareUrl() {
+            if (savedSpotIds.length === 0) {
+                alert('請先選擇至少一個定案景點！');
+                return;
+            }
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${baseUrl}?saved=${savedSpotIds.join(',')}`;
+            
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert('已成功複製專屬行程連結！傳送給家人開啟即可同步查看你的定案行程。');
+            });
+        }
+
+        // 複製傳 LINE 訊息
         function copyLineSchedule() {
             const savedSpots = spots.filter(s => savedSpotIds.includes(s.id));
             if (savedSpots.length === 0) {
@@ -945,22 +547,32 @@
             }
 
             let lineText = `🚗【2026 嘉義家族 4 天 3 夜深度遊定案行程】\n\n`;
-            savedSpots.forEach((s, idx) => {
-                lineText += `${idx + 1}. ${s.name}\n`;
-                lineText += `📍地址：${s.address || s.locationShort}\n`;
-                if (s.openHours) lineText += `🕒營業：${s.openHours}\n`;
-                if (s.phone) lineText += `📞電話：${s.phone}\n`;
-                lineText += `⏱️停留：${s.time}\n`;
-                lineText += `💡攻略：${s.desc}\n\n`;
+            
+            const categoriesOrder = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
+            categoriesOrder.forEach(cat => {
+                const group = savedSpots.filter(s => s.category === cat);
+                if (group.length > 0) {
+                    lineText += `📌 【${cat}】\n`;
+                    group.forEach((s, idx) => {
+                        lineText += `${idx + 1}. ${s.name}\n`;
+                        lineText += `📍地址：${s.address || s.locationShort}\n`;
+                        if (s.openHours) lineText += `🕒營業：${s.openHours}\n`;
+                        if (s.phone) lineText += `📞電話：${s.phone}\n`;
+                        lineText += `⏱️停留：${s.time}\n`;
+                        lineText += `💡攻略：${s.desc}\n\n`;
+                    });
+                }
             });
-            lineText += `完整決策沙盒地圖連結請查看群組內公告！`;
+
+            const baseUrl = window.location.origin + window.location.pathname;
+            lineText += `線上決策沙盒地圖連結：\n${baseUrl}?saved=${savedSpotIds.join(',')}`;
 
             navigator.clipboard.writeText(lineText).then(() => {
                 alert('已成功複製家族行程摘要！可以直接貼上傳到 LINE 群組討論。');
             });
         }
 
-        // 彈出視窗切換
+        // Modals
         function toggleRadarModal() {
             const modal = document.getElementById('radarModal');
             modal.classList.toggle('hidden');
@@ -973,7 +585,7 @@
             modal.classList.toggle('flex');
         }
 
-        // 初始化雷達圖 (Chart.js)
+        // Radar Chart
         function initRadarChart() {
             const ctx = document.getElementById('radarChart').getContext('2d');
             new Chart(ctx, {
