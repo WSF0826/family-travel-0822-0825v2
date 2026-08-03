@@ -40,10 +40,10 @@
             </div>
             <div>
                 <h1 class="font-bold text-lg md:text-xl text-slate-100 flex items-center gap-2">
-                    嘉義家族四日遊
+                    嘉義家族四日深度遊決策沙盒
                     <span class="text-xs font-normal px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">15人 4車專屬</span>
                 </h1>
-                <p class="text-sm text-slate-400 hidden md:block">2026/08/22 - 08/25 吳氏一身輕-家族深度旅遊</p>
+                <p class="text-sm text-slate-400 hidden md:block">2026/08/22 - 08/25 家族深度旅遊，備案一鍵切換與決策視圖</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 md:space-x-3">
@@ -63,7 +63,19 @@
         </div>
     </header>
 
-    <!-- Navigation -->
+    <!-- [優化 2] 手機端顯眼導覽切換分頁標籤按鈕列 -->
+    <div class="md:hidden bg-slate-900 border-b border-slate-800 p-2 grid grid-cols-2 gap-2 shrink-0 z-30">
+        <button id="tabBtnList" onclick="switchMobileTab('list')" class="py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-sky-600 text-white transition shadow-md">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>[1. 景點列表]</span>
+        </button>
+        <button id="tabBtnDetail" onclick="switchMobileTab('detail')" class="py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-slate-800 text-slate-400 transition">
+            <i class="fa-solid fa-circle-info"></i>
+            <span id="tabDetailTitle">[2. 景點詳情]</span>
+        </button>
+    </div>
+
+    <!-- Navigation (天數分類) -->
     <nav class="bg-slate-900/60 border-b border-slate-800 px-4 py-2.5 shrink-0 overflow-x-auto flex space-x-2 no-scrollbar">
         <button onclick="filterCategory('ALL')" class="cat-btn active px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-sky-600 text-white" data-cat="ALL">全部景點</button>
         <button onclick="filterCategory('DAY 1 海線')" class="cat-btn px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700" data-cat="DAY 1 海線">DAY 1 海線</button>
@@ -82,22 +94,23 @@
                     <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋景點、美食、備案、地址..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500 transition">
                 </div>
             </div>
-            <div id="spotList" class="flex-1 overflow-y-auto p-3 space-y-2">
+            <!-- [優化 1] 景點卡片清單容器 (加大間距) -->
+            <div id="spotList" class="flex-1 overflow-y-auto p-3 space-y-3">
             </div>
         </section>
 
-        <!-- 加大 pb-36 避免手機版底部導航欄遮擋內容 -->
+        <!-- 詳情面板 Container -->
         <section id="detailPanel" class="hidden md:flex flex-1 flex-col bg-slate-950 overflow-y-auto pb-36 md:pb-8">
             <div id="detailContent" class="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
             </div>
         </section>
     </main>
 
-    <!-- 手機端顯眼 Floating 滿版導航 Bar (層級 z-40) -->
+    <!-- [優化 3] 經典 Google Maps 藍底白字直覺導航浮動列 -->
     <div id="mobileNavBar" class="fixed bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-3 z-40 md:hidden hidden shadow-2xl">
-        <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-sky-600 text-white font-extrabold text-base rounded-xl flex items-center justify-center gap-2 shadow-2xl active:scale-98 transition">
-            <i class="fa-solid fa-location-arrow text-lg"></i>
-            <span>開啟 Google Maps 導航前往</span>
+        <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-4 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-extrabold text-lg rounded-xl flex items-center justify-center gap-2.5 shadow-2xl active:scale-98 transition">
+            <i class="fa-solid fa-location-arrow text-xl"></i>
+            <span>開 Google 地圖帶路 (點我)</span>
         </a>
     </div>
 
@@ -164,7 +177,7 @@
         const spots = [
             // DAY 1
             { id: "spot_bear_harbor", name: "寶熊漁樂碼頭 (D1上午)", category: "DAY 1 海線", time: "2 小時", locationShort: "臺中市潭子區", address: "臺中市潭子區中山路三段11號", openHours: "10:00 – 17:30 (週二、三公休)", phone: "04-3505-6115", icon: "fa-fish", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=寶熊漁樂碼頭", seniorEval: "室內平緩、有座椅與冷氣，非常舒適", kidEval: "釣魚故事館與巨型釣魚機，放電指數高", transport: "附設專用停車場，4台車好停", weatherSuit: "晴雨皆宜（室內館）", desc: "全台唯一釣具主題觀光工廠，適合家族作為第一站室內景點。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若想切換至質感街區漫步，可轉往土庫里" },
-            { id: "spot_mitsui_outlet", name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)", category: "DAY 1 海線", time: "3-4 小時", locationShort: "臺中市梧棲區", address: "臺中市梧棲區臺灣大道十段168號", openHours: "11:00 – 21:30 (假日 10:30 開門)", phone: "04-2521-8999", icon: "fa-bag-shopping", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港", seniorEval: "美食街選擇多，有室內休息區與電梯", kidEval: "摩天輪與海景景觀，空間寬敞", transport: "大型免費停車場，15人4車無壓力", weatherSuit: "晴雨皆宜（購物中心）", desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若不想逛大型商場，可切換至文青選品小店路線" },
+            { id: "spot_mitsui_outlet", name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)", category: "DAY 1 海線", time: "3-4 小時", locationShort: "臺中市梧棲區", address: "臺中市梧棲區臺灣大道十段168號", openHours: "11:00 – 21:30 (假日 10:30 開門)", phone: "04-2521-8999", icon: "fa-bag-shopping", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港", seniorEval: "美食街選擇多，有室內休息區與電梯", kidEval: "摩天輪與海景景觀，空間寬敞", transport: "大型免費停車場，15人4车無壓力", weatherSuit: "晴雨皆宜（購物中心）", desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若不想逛大型商場，可切換至文青選品小店路線" },
             { id: "spot_gaomei_wetland", name: "高美濕地木棧道 (D1傍晚 Plan A)", category: "DAY 1 海線", time: "1.5 小時", locationShort: "臺中市清水區", address: "臺中市清水區美堤街", openHours: "09:00 – 18:00 (開放時間依潮汐時間調整)", phone: "04-2656-5810", icon: "fa-water", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=高美濕地木棧道", seniorEval: "夕陽美景絕佳，需注意海風與海風吹拂溫度", kidEval: "潮間帶觀察螃蟹與彈塗魚，自然生態豐富", transport: "周邊有收費停車場，注意強風時段駕車", weatherSuit: "僅限晴天（大風/雨天不宜）", desc: "國際級夕陽絕景，適合全家拍團體大合照。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "海邊風大或下雨時，一鍵切換至室內或質感街區" },
             // DAY 2
             { id: "spot_jourdeness_castle", name: "佐登妮絲城堡 (D2美學首選)", category: "DAY 2 美學", time: "2 - 2.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區三路15號", openHours: "09:00 – 19:00", phone: "04-2369-6266", icon: "fa-chess-rook", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=佐登妮絲城堡", seniorEval: "巴洛克歐式建築與噴泉非常氣派，但戶外大理石折射強、遮蔽少", kidEval: "華麗穹頂與城堡廣場拍照效果好，視覺震撼", transport: "園區設有專屬大型停車場，4台車好停", weatherSuit: "室內展區有冷氣，但戶外極度曝曬", desc: "商業推銷感較重。建議傍晚 16:00 後入場避開烈日與頂光，拍人像更美。可與蓋婭莊園進行二選一。", backupId: "spot_gaia_manor", backupName: "蓋婭莊園", backupReason: "若想看同風格美學園區或避開人潮，可切換至蓋婭莊園" },
@@ -223,16 +236,32 @@
             savedSpotIds = JSON.parse(localStorage.getItem('chiayi_saved_spots') || '[]');
         }
 
-        // 輔助函式：返回列表 (手機版)
-        function backToList() {
+        // [優化 2] 手機端兩欄切換按鈕控制 logic
+        function switchMobileTab(targetTab) {
             const detailPanel = document.getElementById('detailPanel');
             const listPanel = document.getElementById('listPanel');
             const mobileBar = document.getElementById('mobileNavBar');
-            
-            detailPanel.classList.add('hidden');
-            detailPanel.classList.remove('flex');
-            listPanel.classList.remove('hidden');
-            mobileBar.classList.add('hidden');
+            const btnList = document.getElementById('tabBtnList');
+            const btnDetail = document.getElementById('tabBtnDetail');
+
+            if (targetTab === 'list') {
+                listPanel.classList.remove('hidden');
+                detailPanel.classList.add('hidden');
+                detailPanel.classList.remove('flex');
+                mobileBar.classList.add('hidden');
+
+                btnList.className = "py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-sky-600 text-white transition shadow-md";
+                btnDetail.className = "py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-slate-800 text-slate-400 transition";
+            } else {
+                listPanel.classList.add('hidden');
+                detailPanel.classList.remove('hidden');
+                detailPanel.classList.add('flex');
+                mobileBar.classList.remove('hidden');
+
+                btnDetail.className = "py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-sky-600 text-white transition shadow-md";
+                btnList.className = "py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-slate-800 text-slate-400 transition";
+                window.scrollTo(0, 0);
+            }
         }
 
         // 分類篩選
@@ -248,20 +277,20 @@
                 }
             });
             renderSidebarSpots();
-            if (window.innerWidth < 768) backToList();
+            if (window.innerWidth < 768) switchMobileTab('list');
         }
 
         // 搜尋處理
         function handleSearch() {
             renderSidebarSpots();
-            if (window.innerWidth < 768) backToList();
+            if (window.innerWidth < 768) switchMobileTab('list');
         }
 
         function getSpotRegion(spot) {
             return (spot.locationShort && spot.locationShort.includes('臺中')) ? 'taichung' : 'chiayi';
         }
 
-        // 渲染左側景點清單
+        // [優化 1] 渲染左側景點清單 (加大上下 Padding p-4.5)
         function renderSidebarSpots() {
             const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
             const listContainer = document.getElementById('spotList');
@@ -288,14 +317,14 @@
                 const bgGradient = region === 'taichung' ? 'from-sky-900 to-indigo-900 text-sky-300 border-sky-700/50' : 'from-amber-900 to-orange-900 text-amber-300 border-amber-700/50';
 
                 return `
-                    <div onclick="selectSpotById('${spot.id}')" class="p-3.5 bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800/80 rounded-xl cursor-pointer transition flex space-x-3 items-center group ${isActive ? 'spot-card-active' : ''}">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${bgGradient} border flex items-center justify-center shrink-0 shadow-inner">
-                            <i class="fa-solid ${iconClass} text-xl"></i>
+                    <div onclick="selectSpotById('${spot.id}')" class="p-4.5 bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800/80 rounded-xl cursor-pointer transition flex space-x-3.5 items-center group ${isActive ? 'spot-card-active' : ''}">
+                        <div class="w-13 h-13 p-3 rounded-xl bg-gradient-to-br ${bgGradient} border flex items-center justify-center shrink-0 shadow-inner">
+                            <i class="fa-solid ${iconClass} text-2xl"></i>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-1">
-                                <h4 class="font-bold text-sm ${isActive ? 'text-sky-400' : 'text-slate-100'} truncate group-hover:text-sky-400 transition">${spot.name}</h4>
-                                ${isSaved ? '<i class="fa-solid fa-star text-amber-400 text-sm shrink-0"></i>' : ''}
+                            <div class="flex items-center justify-between mb-1.5">
+                                <h4 class="font-bold text-base ${isActive ? 'text-sky-400' : 'text-slate-100'} truncate group-hover:text-sky-400 transition">${spot.name}</h4>
+                                ${isSaved ? '<i class="fa-solid fa-star text-amber-400 text-base shrink-0 ml-1"></i>' : ''}
                             </div>
                             <div class="text-xs text-slate-400 flex items-center space-x-2">
                                 <span><i class="fa-regular fa-clock mr-1"></i>${spot.time}</span>
@@ -314,22 +343,18 @@
                 currentSpot = spot;
                 renderSidebarSpots();
                 renderDetailPanel(spot);
-                
-                const detailPanel = document.getElementById('detailPanel');
-                const listPanel = document.getElementById('listPanel');
-                const mobileBar = document.getElementById('mobileNavBar');
+
+                // 更新分頁按鈕顯示之景點名稱
+                const shortName = spot.name.length > 8 ? spot.name.substring(0, 8) + '...' : spot.name;
+                document.getElementById('tabDetailTitle').innerText = `[2. ${shortName}]`;
 
                 if (window.innerWidth < 768) {
-                    listPanel.classList.add('hidden');
-                    detailPanel.classList.remove('hidden');
-                    detailPanel.classList.add('flex');
-                    mobileBar.classList.remove('hidden');
-                    window.scrollTo(0, 0);
+                    switchMobileTab('detail');
                 }
             }
         }
 
-        // 渲染詳情頁 (增加了定案按鈕容器底部 mb-12 md:mb-0 防重疊)
+        // 渲染詳情頁
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
@@ -346,18 +371,14 @@
             document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
 
             detailContainer.innerHTML = `
-                <button onclick="backToList()" class="md:hidden mb-4 px-3.5 py-2 bg-slate-800 text-slate-300 rounded-lg text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-chevron-left"></i> 返回景點清單
-                </button>
-
                 <div class="relative h-52 md:h-60 rounded-2xl overflow-hidden mb-6 p-6 bg-gradient-to-br ${bgGradient} border border-slate-800 flex flex-col justify-between shadow-2xl">
                     <div class="flex items-center justify-between">
                         <div class="flex gap-2">
                             <span class="px-3 py-1 rounded-full text-xs font-bold ${region === 'taichung' ? 'bg-sky-600 text-white' : 'bg-amber-600 text-white'}">${spot.category}</span>
                             <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-900/80 backdrop-blur-md text-slate-200 border border-slate-700/50"><i class="fa-regular fa-clock mr-1"></i>停留 ${spot.time}</span>
                         </div>
-                        <a href="${spot.googleMapsUrl}" target="_blank" class="px-3.5 py-2 bg-slate-900/80 hover:bg-sky-600 text-white text-xs font-bold rounded-lg backdrop-blur-md transition flex items-center gap-1.5 border border-slate-700">
-                            <i class="fa-solid fa-location-dot text-amber-400"></i> 地圖導航 ↗
+                        <a href="${spot.googleMapsUrl}" target="_blank" class="px-3.5 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-location-dot"></i> 地圖導航 ↗
                         </a>
                     </div>
                     <div class="flex items-end space-x-4">
@@ -450,7 +471,6 @@
                     </div>
                 ` : ''}
 
-                <!-- 定案按鈕容器增加 mb-12 md:mb-0 避免手機版遮擋 -->
                 <div class="mb-12 md:mb-0">
                     <button onclick="toggleSaveSpot('${spot.id}')" class="w-full py-4 ${isSaved ? 'bg-amber-600 hover:bg-amber-500' : 'bg-sky-600 hover:bg-sky-500'} text-white font-bold text-base rounded-xl transition flex items-center justify-center gap-2 shadow-xl">
                         <i class="fa-solid ${isSaved ? 'fa-check' : 'fa-star'} text-lg"></i>
@@ -508,12 +528,12 @@
                                 <span class="text-xs text-slate-500 font-normal">${group.length} 個景點</span>
                             </div>
                             ${group.map(s => `
-                                <div class="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex items-center justify-between hover:border-slate-700 transition">
+                                <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between hover:border-slate-700 transition">
                                     <div class="min-w-0 pr-2">
                                         <h5 class="font-bold text-sm text-slate-200 truncate">${s.name}</h5>
                                         <p class="text-xs text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${s.time}</p>
                                     </div>
-                                    <button onclick="toggleSaveSpot('${s.id}')" class="text-slate-500 hover:text-red-400 p-2 shrink-0"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                                    <button onclick="toggleSaveSpot('${s.id}')" class="text-slate-500 hover:text-red-400 p-2 shrink-0"><i class="fa-solid fa-trash-can text-base"></i></button>
                                 </div>
                             `).join('')}
                         </div>
