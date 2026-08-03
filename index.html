@@ -47,10 +47,9 @@
             </div>
         </div>
         <div class="flex items-center space-x-2 md:space-x-3">
-            <!-- 功能按鈕：新增【全區地圖】按鈕 -->
             <button onclick="toggleRouteMapModal()" class="px-3 py-1.5 bg-sky-900/60 hover:bg-sky-800 text-sky-300 text-sm font-bold rounded-lg border border-sky-700 transition flex items-center gap-1.5 shadow-sm">
                 <i class="fa-solid fa-map text-sky-400"></i>
-                <span class="hidden sm:inline">全區路線圖</span>
+                <span class="hidden sm:inline">每日總路線圖</span>
             </button>
             <button onclick="toggleRadarModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm rounded-lg border border-slate-700 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-pie text-sky-400"></i>
@@ -118,20 +117,32 @@
         </a>
     </div>
 
-    <!-- 方案 2：新增【全區每日路線圖】 Modal -->
+    <!-- 方案 B：升級【每日總路線圖】 Modal (帶天數切換頁籤) -->
     <div id="routeMapModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl relative flex flex-col max-h-[90vh]">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-2xl w-full shadow-2xl relative flex flex-col max-h-[90vh]">
             <button onclick="toggleRouteMapModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             <h3 class="text-lg font-bold text-slate-100 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-map text-sky-400"></i> 4 天行程全區景點分佈地圖
+                <i class="fa-solid fa-map text-sky-400"></i> 全區每日路線檢視
             </h3>
-            <p class="text-sm text-slate-400 mb-4">掌握 4 台車的開車路線與景點相對位置。</p>
-            <div class="w-full h-80 md:h-96 rounded-xl overflow-hidden border border-slate-800 bg-slate-950 relative">
-                <!-- 預設載入嘉義/台中總覽 Google 地圖 -->
-                <iframe id="overviewMapIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=嘉義縣&t=&z=10&ie=UTF8&iwloc=&output=embed"></iframe>
+            <p class="text-xs text-slate-400 mb-3">點擊天數切換當天 4 車主要開車路線與景點分佈：</p>
+            
+            <!-- 天數切換頁籤 -->
+            <div class="flex space-x-2 mb-3 overflow-x-auto pb-1 no-scrollbar">
+                <button onclick="changeOverviewDay(1)" id="mapDayBtn1" class="px-3.5 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-lg whitespace-nowrap">DAY 1 海線</button>
+                <button onclick="changeOverviewDay(2)" id="mapDayBtn2" class="px-3.5 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs rounded-lg whitespace-nowrap">DAY 2 美學</button>
+                <button onclick="changeOverviewDay(3)" id="mapDayBtn3" class="px-3.5 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs rounded-lg whitespace-nowrap">DAY 3 萌寵</button>
+                <button onclick="changeOverviewDay(4)" id="mapDayBtn4" class="px-3.5 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs rounded-lg whitespace-nowrap">DAY 4 北返</button>
             </div>
-            <div class="mt-4 flex justify-end">
-                <button onclick="toggleRouteMapModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl">關閉地圖</button>
+
+            <div class="w-full h-80 md:h-96 rounded-xl overflow-hidden border border-slate-800 bg-slate-950 relative">
+                <iframe id="overviewMapIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=寶熊漁樂碼頭+to:MITSUI+OUTLET+PARK+台中港+to:高美濕地木棧道&output=embed"></iframe>
+            </div>
+            
+            <div class="mt-4 flex justify-between items-center flex-wrap gap-2">
+                <a id="openFullRouteBtn" href="https://www.google.com/maps/dir/寶熊漁樂碼頭/MITSUI+OUTLET+PARK+台中港/高美濕地木棧道" target="_blank" class="text-xs text-sky-400 hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> 用 Google 地圖 App 開啟整條路線 ➔
+                </a>
+                <button onclick="toggleRouteMapModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl">關閉</button>
             </div>
         </div>
     </div>
@@ -368,7 +379,6 @@
             }
         }
 
-        // [方案 1 實現] 渲染詳情頁（含 Google 地圖嵌入 iframe）
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
@@ -382,7 +392,6 @@
             const openHoursText = spot.openHours || "請洽官方公告";
             const phoneText = spot.phone || "無提供或現場洽詢";
 
-            // 地圖搜尋 Query URL
             const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(spot.name + ' ' + fullAddress)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
             document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
@@ -466,7 +475,6 @@
                     </div>
                 </div>
 
-                <!-- [方案 1 實現] 景點即時 Google 地圖展示卡片 -->
                 <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl mb-6">
                     <h3 class="text-sm font-bold text-slate-200 mb-2.5 flex items-center justify-between">
                         <span class="flex items-center gap-2"><i class="fa-solid fa-map-pin text-sky-400"></i> 景點位置圖</span>
@@ -616,7 +624,39 @@
             });
         }
 
-        // 全區路線圖 Modal 開啟/關閉
+        // 方案 B：每日總路線圖 Map 切換邏輯
+        const dayRoutes = {
+            1: {
+                iframe: "https://maps.google.com/maps?q=寶熊漁樂碼頭+to:MITSUI+OUTLET+PARK+台中港+to:高美濕地木棧道&output=embed",
+                direct: "https://www.google.com/maps/dir/寶熊漁樂碼頭/MITSUI+OUTLET+PARK+台中港/高美濕地木棧道"
+            },
+            2: {
+                iframe: "https://maps.google.com/maps?q=佐登妮絲城堡+to:昭和十八J18+to:嘉義市立美術館+to:故宮南院&output=embed",
+                direct: "https://www.google.com/maps/dir/佐登妮絲城堡/昭和十八J18/嘉義市立美術館/故宮南院"
+            },
+            3: {
+                iframe: "https://maps.google.com/maps?q=三隻小豬觀光農場+to:新嘉大昆蟲館+to:阿里山國家森林遊樂區&output=embed",
+                direct: "https://www.google.com/maps/dir/三隻小豬觀光農場/新嘉大昆蟲館/阿里山國家森林遊樂區"
+            },
+            4: {
+                iframe: "https://maps.google.com/maps?q=品皇咖啡觀光工廠+to:東勢獨角仙生態公園&output=embed",
+                direct: "https://www.google.com/maps/dir/品皇咖啡觀光工廠/東勢獨角仙生態公園"
+            }
+        };
+
+        function changeOverviewDay(day) {
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`mapDayBtn${i}`);
+                if (i === day) {
+                    btn.className = "px-3.5 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-lg whitespace-nowrap";
+                } else {
+                    btn.className = "px-3.5 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs rounded-lg whitespace-nowrap";
+                }
+            }
+            document.getElementById('overviewMapIframe').src = dayRoutes[day].iframe;
+            document.getElementById('openFullRouteBtn').href = dayRoutes[day].direct;
+        }
+
         function toggleRouteMapModal() {
             const modal = document.getElementById('routeMapModal');
             modal.classList.toggle('hidden');
