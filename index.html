@@ -42,7 +42,7 @@
             color: #334155 !important;
             font-weight: 500 !important;
         }
-        body.light-mode input {
+        body.light-mode input, body.light-mode select {
             background-color: #f8fafc !important;
             color: #0f172a !important;
             border-color: #94a3b8 !important;
@@ -222,6 +222,10 @@
         <div id="savedList" class="flex-1 overflow-y-auto p-4 space-y-4">
         </div>
         <div class="p-4 border-t border-slate-800 bg-slate-950/80 space-y-2">
+            <button onclick="resetToDefaultCategories()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-700">
+                <i class="fa-solid fa-rotate-left text-amber-400"></i>
+                恢復系統預設行程排定
+            </button>
             <button onclick="copyShareUrl()" class="w-full py-2.5 bg-sky-700 hover:bg-sky-600 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-share-nodes"></i>
                 複製連結分享此行程
@@ -262,14 +266,14 @@
 
         let currentFood = foodsData[0];
 
-        // 完整景點資料庫 (含新納入之台灣花磚博物館)
+        // 完整景點資料庫 (含修復後之台灣花磚博物館圖片連結)
         const spots = [
             // DAY 1
             { id: "spot_bear_harbor", name: "寶熊漁樂碼頭 (D1上午)", category: "DAY 1 海線", time: "2 小時", locationShort: "臺中市潭子區", address: "臺中市潭子區中山路三段11號", openHours: "10:00 – 17:30 (週二、三公休)", phone: "04-3505-6115", icon: "fa-fish", imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=寶熊漁樂碼頭", seniorEval: "室內平緩、有座椅與冷氣，非常舒適", kidEval: "釣魚故事館與巨型釣魚機，放電指數高", transport: "附設專用停車場，4台車好停", weatherSuit: "晴雨皆宜（室內館）", desc: "全台唯一釣具主題觀光工廠，適合家族作為第一站室內景點。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若想切換至質感街區漫步，可轉往土庫里" },
             { id: "spot_mitsui_outlet", name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)", category: "DAY 1 海線", time: "3-4 小時", locationShort: "臺中市梧棲區", address: "臺中市梧棲區臺灣大道十段168號", openHours: "11:00 – 21:30 (假日 10:30 開門)", phone: "04-2521-8999", icon: "fa-bag-shopping", imageUrl: "https://images.unsplash.com/photo-1519567241046-7f570eee3ce6?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港", seniorEval: "美食街選擇多，有室內休息區與電梯", kidEval: "摩天輪與海景景觀，空間寬敞", transport: "大型免費停車場，15人4車無壓力", weatherSuit: "晴雨皆宜（購物中心）", desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若不想逛大型商場，可切換至文青選品小店路線" },
             { id: "spot_gaomei_wetland", name: "高美濕地木棧道 (D1傍晚 Plan A)", category: "DAY 1 海線", time: "1.5 小時", locationShort: "臺中市清水區", address: "臺中市清水區美堤街", openHours: "09:00 – 18:00 (開放時間依潮汐調整)", phone: "04-2656-5810", icon: "fa-water", imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=高美濕地木棧道", seniorEval: "夕陽美景絕佳，需注意海風與海風吹拂溫度", kidEval: "潮間帶觀察螃蟹與彈塗魚，自然生態豐富", transport: "周邊有收費停車場，注意強風時段駕車", weatherSuit: "僅限晴天（大風/雨天不宜）", desc: "國際級夕陽絕景，適合全家拍團體大合照。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "海邊風大或下雨時，一鍵切換至室內或質感街區" },
             // DAY 2
-            { id: "spot_tiles_museum", name: "台灣花磚博物館 (D2文化美學)", category: "🎨 DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市西區", address: "嘉義市西區林森西路282號", openHours: "10:00 – 17:30 (週一、二公休)", phone: "0979-060-750", icon: "fa-cubes", imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=台灣花磚博物館", seniorEval: "老宅木梯較陡，需注意步履；館內珍藏百年花磚極具文化韻味", kidEval: "花磚圖騰豐富且提供 DIY 體驗，拍照視覺效果好", transport: "林森西路路邊停車或旁邊收費停車場", weatherSuit: "晴雨皆宜（全室內館）", desc: "收藏上千片搶救保留下來的珍貴百年老房屋花磚，是全台獨一無二的文化展館與絕美拍照地標。", backupId: "spot_chayi_art_museum", backupName: "嘉義市立美術館", backupReason: "若館內人潮過多，可切換至附近的嘉義市立美術館" },
+            { id: "spot_tiles_museum", name: "台灣花磚博物館 (D2文化美學)", category: "🎨 DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市西區", address: "嘉義市西區林森西路282號", openHours: "10:00 – 17:30 (週一、二公休)", phone: "0979-060-750", icon: "fa-cubes", imageUrl: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=台灣花磚博物館", seniorEval: "老宅木梯較陡，需注意步履；館內珍藏百年花磚極具文化韻味", kidEval: "花磚圖騰豐富且提供 DIY 體驗，拍照視覺效果好", transport: "林森西路路邊停車或旁邊收費停車場", weatherSuit: "晴雨皆宜（全室內館）", desc: "收藏上千片搶救保留下來的珍貴百年老房屋花磚，是全台獨一無二的文化展館與絕美拍照地標。", backupId: "spot_chayi_art_museum", backupName: "嘉義市立美術館", backupReason: "若館內人潮過多，可切換至附近的嘉義市立美術館" },
             { id: "spot_jourdeness_castle", name: "佐登妮絲城堡 (D2美學首選)", category: "DAY 2 美學", time: "2 - 2.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區三路15號", openHours: "09:00 – 19:00", phone: "04-2369-6266", icon: "fa-chess-rook", imageUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=佐登妮絲城堡", seniorEval: "巴洛克歐式建築與噴泉氣派，但戶外大理石折射強遮蔽少", kidEval: "華麗穹頂與城堡廣場拍照效果好，視覺震撼", transport: "園區設有專屬大型停車場，4台車好停", weatherSuit: "室內展區有冷氣，但戶外極度曝曬", desc: "商業推銷感較重。建議傍晚 16:00 後入場避開烈日與頂光，拍人像更美。", backupId: "spot_gaia_manor", backupName: "蓋婭莊園", backupReason: "若想看同風格美學園區或避開人潮，可切換至蓋婭莊園" },
             { id: "spot_oulowo_castle", name: "歐樂沃築夢城堡 (D2大林中繼)", category: "DAY 2 美學", time: "0.5 - 1 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區九路12號", openHours: "09:00 – 17:30", phone: "05-295-6588", icon: "fa-cookie-bite", imageUrl: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=歐樂沃築夢城堡", seniorEval: "室內動線尚可，可作為去阿里山或大林途中的高級休憩站點", kidEval: "蒸汽龐克風格童話城堡，拍照打卡與巧克力主題明確", transport: "大埔美園區道路寬敞，4台車輕鬆停放", weatherSuit: "室內冷氣為主（躲太陽聖地）", desc: "動線採先拍照後購物模式，蒸汽龐克童話風格極具特色。", backupId: "spot_meatball_planet", backupName: "丸聚星球", backupReason: "若遇人潮過多，可轉往同在大埔美園區的丸聚星球" },
             { id: "spot_gaia_manor", name: "蓋婭莊園 (D2大林歐風備選)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區七路18號", openHours: "08:30 – 17:30", phone: "0910-856-299", icon: "fa-chess-king", imageUrl: "https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=蓋婭莊園", seniorEval: "希臘純白宮殿，美妝保養主題，適合走走停停散步", kidEval: "純白建築與許願池打卡，美感拍照點多", transport: "周邊停車方便，4台車無壓力", weatherSuit: "戶外極亮曝曬，需攜帶陽傘", desc: "與佐登妮絲城堡鄰近，建議兩者「二選一」即可避免疲勞。", backupId: "spot_jourdeness_castle", backupName: "佐登妮絲城堡", backupReason: "若想看更氣派的巴洛克噴泉城堡，可切換至佐登妮絲" },
@@ -295,6 +299,13 @@
             { id: "spot_tuku_walk", name: "土庫里雜貨散策 (D1/D4質感備案)", category: "☔ 備案專區", time: "1.5 - 2 小時", locationShort: "臺中市西區土庫里", address: "臺中市西區土庫里 (五權西六街 / 美村路一段周邊)", openHours: "13:00 – 19:00 (依各店為準)", phone: "無統一電話 (各獨立選品店)", icon: "fa-store", imageUrl: "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&w=800&q=80", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=台中市西區土庫里", seniorEval: "懷舊唱片行與古董選品，巷弄平緩好漫步", kidEval: "特色雜貨與食器小店，適合青年與長輩分組走逛歇腳", transport: "巷弄窄，4台車請停放忠明南路/美村路收費停車場", weatherSuit: "晴雨皆宜（雨天可於各選品店與咖啡廳間穿梭）", desc: "精選感傷唱片行、明星古董、CameZa、味兒食器與橘豆等 20+ 特色選品小店。", backupId: "spot_mitsui_outlet", backupName: "MITSUI OUTLET PARK 台中港", backupReason: "若家族成員想尋找大空間好停車的商場，可切換至此" }
         ];
 
+        // 備份系統預設景點分類狀態（作為「恢復預設」按鈕對照）
+        const defaultSpotCategories = {};
+        spots.forEach(s => { defaultSpotCategories[s.id] = s.category; });
+
+        // 可供選擇的所有天數分類選項
+        const categoryOptions = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
+
         // 全域狀態
         let currentCategory = 'ALL';
         let currentSpot = spots[0];
@@ -313,6 +324,7 @@
 
         // 初始化頁面
         window.onload = () => {
+            loadCustomCategoriesFromStorage();
             initSavedSpotsFromUrlOrStorage();
             renderSidebarSpots();
             renderDetailPanel(currentSpot);
@@ -320,6 +332,50 @@
             initRadarChart();
             renderFoodModalContent();
         };
+
+        // 讀取本地端使用者編輯過的天數分類
+        function loadCustomCategoriesFromStorage() {
+            const storedCategories = JSON.parse(localStorage.getItem('chiayi_custom_categories') || '{}');
+            spots.forEach(s => {
+                if (storedCategories[s.id]) {
+                    s.category = storedCategories[s.id];
+                }
+            });
+        }
+
+        // 動態編輯景點天數分類
+        function updateSpotCategory(spotId, newCategory) {
+            const spot = spots.find(s => s.id === spotId);
+            if (spot) {
+                spot.category = newCategory;
+                // 儲存至 localStorage
+                const storedCategories = JSON.parse(localStorage.getItem('chiayi_custom_categories') || '{}');
+                storedCategories[spotId] = newCategory;
+                localStorage.setItem('chiayi_custom_categories', JSON.stringify(storedCategories));
+
+                renderSidebarSpots();
+                renderDetailPanel(spot);
+                if (!document.getElementById('savedDrawer').classList.contains('translate-x-full')) {
+                    renderSavedDrawerList();
+                }
+            }
+        }
+
+        // 一鍵恢復系統預設行程排定
+        function resetToDefaultCategories() {
+            if (confirm('確定要將所有景點恢復為系統預設的天數安排嗎？')) {
+                localStorage.removeItem('chiayi_custom_categories');
+                spots.forEach(s => {
+                    if (defaultSpotCategories[s.id]) {
+                        s.category = defaultSpotCategories[s.id];
+                    }
+                });
+                renderSidebarSpots();
+                renderDetailPanel(currentSpot);
+                renderSavedDrawerList();
+                alert('已恢復為系統預設行程安排！');
+            }
+        }
 
         // ☀️/🌙 戶外日光模式切換
         function toggleThemeMode() {
@@ -591,14 +647,24 @@
             const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(spot.name + ' ' + fullAddress)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
             document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
 
+            const categorySelectHtml = `
+                <div class="flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/80 shadow-lg">
+                    <span class="text-xs text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-pen-to-square text-sky-400 mr-1"></i>調整天數：</span>
+                    <select onchange="updateSpotCategory('${spot.id}', this.value)" class="bg-slate-950 border border-slate-800 text-sky-400 text-xs font-bold rounded-lg px-2 py-1 focus:outline-none focus:border-sky-500 cursor-pointer">
+                        ${categoryOptions.map(opt => `<option value="${opt}" ${spot.category === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+
             detailContainer.innerHTML = `
                 <div class="relative h-56 md:h-72 rounded-2xl overflow-hidden mb-6 p-6 border border-slate-800 flex flex-col justify-between shadow-2xl bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.95)), url('${spot.imageUrl}');">
-                    <div class="flex items-center justify-between z-10">
-                        <div class="flex gap-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 z-10">
+                        <div class="flex items-center gap-2 flex-wrap">
                             <span class="px-3 py-1 rounded-full text-xs font-bold border ${colorStyle.badge}">${spot.category}</span>
                             <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-900/80 backdrop-blur-md text-slate-200 border border-slate-700/50"><i class="fa-regular fa-clock mr-1"></i>停留 ${spot.time}</span>
+                            ${categorySelectHtml}
                         </div>
-                        <a href="${spot.googleMapsUrl}" target="_blank" class="px-3.5 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow-md">
+                        <a href="${spot.googleMapsUrl}" target="_blank" class="px-3.5 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow-md ml-auto">
                             <i class="fa-solid fa-location-dot"></i> 地圖導航 ↗
                         </a>
                     </div>
@@ -725,10 +791,9 @@
                 return;
             }
 
-            const categoriesOrder = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
             let html = '';
 
-            categoriesOrder.forEach(cat => {
+            categoryOptions.forEach(cat => {
                 const group = savedSpots.filter(s => s.category === cat);
                 if (group.length > 0) {
                     html += `
@@ -774,9 +839,8 @@
             }
 
             let lineText = `🚗【2026 嘉義家族 4 天 3 夜深度遊定案行程】\n\n`;
-            const categoriesOrder = ["DAY 1 海線", "DAY 2 美學", "DAY 3 萌寵農創", "DAY 4 北返中繼", "☔ 備案專區"];
 
-            categoriesOrder.forEach(cat => {
+            categoryOptions.forEach(cat => {
                 const group = savedSpots.filter(s => s.category === cat);
                 if (group.length > 0) {
                     lineText += `📌 【${cat}】\n`;
