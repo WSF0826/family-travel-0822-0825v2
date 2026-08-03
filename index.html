@@ -152,7 +152,7 @@
         </a>
     </div>
 
-    <!-- 🍱【家族美食偏好與備案指南】 Modal -->
+    <!-- 🍱【家族美食偏好與備案指南】 Modal (支援手機版單手返回按鈕) -->
     <div id="foodModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-4xl w-full shadow-2xl relative flex flex-col max-h-[85vh] h-[650px]">
             <button onclick="toggleFoodModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -160,7 +160,7 @@
                 <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
                     <i class="fa-solid fa-utensils text-amber-400"></i> 15人 4車家族美食與避坑指南
                 </h3>
-                <p class="text-xs text-slate-400 mt-1">整理沿途長輩軟食/素食、在地人氣小吃、大桌包廂餐廳與點心備案。</p>
+                <p class="text-xs text-slate-400 mt-1">整理沿途長輩軟食/素食、在地人氣小吃、大桌包廂餐廳與點心備案 (共 18 間)。</p>
             </div>
             <div class="flex-1 flex overflow-hidden border border-slate-800 rounded-xl bg-slate-950">
                 <div class="w-full md:w-5/12 border-r border-slate-800 overflow-y-auto p-3 space-y-2.5 shrink-0 bg-slate-900/40" id="foodListContainer">
@@ -230,8 +230,130 @@
     </div>
 
     <script>
-        // 美食資料集
+        // 完整 18 間嘉義美食資料庫 (含 one_more_food IG 推薦名店)
         const foodsData = [
+            {
+                id: "food_jhulu_bbq",
+                name: "逐鹿炭火燒肉 (嘉義店)",
+                tag: "燒肉火鍋吃到飽 / 壽星優惠",
+                day: "DAY 2/3 市區大餐",
+                address: "嘉義市東區大雅路二段808號",
+                phone: "05-275-0058",
+                parking: "大雅路周邊有收費停車場，4車建議分散尋找",
+                tableInfo: "人潮極多（16:30即客滿），15人務必提前訂位要求大桌/包廂",
+                desc: "真木炭燒肉＋火鍋！四大天王牛肉（五花/板腱/霜降/梅花）必點，多汁鯖魚與蝦子新鮮，火鍋可爆煮蛤蜊。當日壽星享免服務費優惠！",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=逐鹿炭火燒肉嘉義店"
+            },
+            {
+                id: "food_xiongzan_pot",
+                name: "雄讚極品鍋 (民雄店)",
+                tag: "極品火鍋 / 菜脯雞與麻油雞胇",
+                day: "DAY 3 中午/晚餐",
+                address: "嘉義縣民雄鄉建國路三段228號",
+                phone: "05-221-5058",
+                parking: "位在建國路主幹道上，周邊好停車，4台車方便",
+                tableInfo: "二樓設有大包廂，極度適合 15 人家族大團體",
+                desc: "假日限定「麻油雞胇鍋」爆漿飽滿；「陳年菜脯雞」湯頭酸香甘甜鮮嫩！菜盤全為原型食物疊如山高，附自助飲料與冰淇淋吃到飽。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=雄讚極品鍋民雄店"
+            },
+            {
+                id: "food_85donut",
+                name: "生甜甜圈 85度C 新生研究所",
+                tag: "現做生甜甜圈 / 車上下午點心",
+                day: "市區下午點心",
+                address: "嘉義市東區新生路721號",
+                openHours: "07:00 - 22:00 (10:30出爐)",
+                phone: "05-271-3268",
+                parking: "路邊可臨時停車，1人下車取餐外帶",
+                tableInfo: "設有超大內用空間，可電話預訂外帶回車上/飯店吃",
+                desc: "每日 10:30 現做 12 種口味生甜甜圈，口感鬆軟如雲朵！必吃「生巧髒髒包」（含生巧克力等5種層次）與「鹹蛋黃爆餡」，買回車上享用超幸福。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=生甜甜圈85度c新生研究所"
+            },
+            {
+                id: "food_zhenxiang_pork",
+                name: "珍香排骨專門店",
+                tag: "極美台式餐館 / 古早味排骨",
+                day: "DAY 2/3 午晚餐",
+                address: "嘉義市西區博愛路一段401號",
+                phone: "05-231-1983",
+                parking: "博愛路周邊收費停車場",
+                tableInfo: "一、二樓皆有漂亮內用座位，家族聚餐質感佳",
+                desc: "嘉義近期極具質感的台式餐館！「蘋果咖哩排骨飯」與「經典炸雞腿飯」皆以中藥醃製外酥內嫩；梅干扣肉入口即化，套餐附溫沙拉與湯品。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=珍香排骨專門店"
+            },
+            {
+                id: "food_chou_noodle",
+                name: "周新新鍋燒意麵",
+                tag: "澎湃平價小吃 / 11種湯頭",
+                day: "DAY 2/3 平價午晚餐",
+                address: "嘉義市東區體育路61號 (週二公休)",
+                openHours: "11:00 - 20:00",
+                phone: "05-228-5688",
+                parking: "體育路周邊好停車，4台車無壓力",
+                tableInfo: "內用空間不少，出餐快，適合家族快速享用平價美食",
+                desc: "11 種湯頭與 5 種麵體！Top 1 人氣「麻奶鍋燒意麵」奶香帶微辣；豪華海鮮版吃得到鮑魚、小卷、干貝與蝦仁，份量極大且高 CP 值。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=周新新鍋燒意麵"
+            },
+            {
+                id: "food_haoke_bbq",
+                name: "好客燒肉 (嘉義店)",
+                tag: "火烤兩吃 / COLD STONE 吃到飽",
+                day: "市區晚餐大餐",
+                address: "嘉義市西區垂楊路525號2樓",
+                phone: "05-227-0353",
+                parking: "設有特約停車場，4車停車免煩惱",
+                tableInfo: "一整棟燒肉空間大，當月壽星享優惠，適合家族大桌",
+                desc: "$668 起火烤兩吃！多達 50 多種食材，包含和牛、牛舌與草蝦，內用更提供 COLD STONE 與 NISEKO 冰淇淋無限吃到飽。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=好客燒肉嘉義店"
+            },
+            {
+                id: "food_dongshi_oyster",
+                name: "東石蚵王",
+                tag: "海鮮烤蚵吃到飽 / 變臉表演",
+                day: "DAY 1 海線傍晚",
+                address: "嘉義縣東石鄉猿樹村206號附27",
+                phone: "0932-800-880",
+                parking: "園區設有大型專用停車場，4車極好停",
+                tableInfo: "半戶外開放空間大，適合大團體烤蚵歡聚",
+                desc: "$200 烤蚵吃到飽！蚵仔經過機器水沖清潔非常乾淨肥美，現場還有變臉表演與駐唱，私房菜「爆汁海苔醬鮮蚵」極度讚不絕口。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=東石蚵王"
+            },
+            {
+                id: "food_xiao_chicken",
+                name: "蕭老師火雞肉飯",
+                tag: "在地人私藏 / 火雞腿肉片便當",
+                day: "DAY 2/3 午餐/便當",
+                address: "嘉義市西區自由路101號 (週五公休)",
+                phone: "05-233-2283",
+                parking: "自由路路邊停車格",
+                tableInfo: "內用或外帶便當皆方便（配菜可選4樣）",
+                desc: "嘉義在地人私藏口袋名店！火雞腿肉片飯淋上古早味雞油與油蔥，古早味酥香排骨便當更是招牌，搭配桂竹筍與濃郁味噌湯超滿足。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=蕭老師火雞肉飯"
+            },
+            {
+                id: "food_daohe_sushi",
+                name: "稻荷壽司",
+                tag: "平價日料 / 厚切特上刺身",
+                day: "DAY 2/3 市區晚餐",
+                address: "嘉義市東區民族路105號",
+                phone: "05-277-0557",
+                parking: "民族路收費停車格",
+                tableInfo: "外帶轉內用名店，建議提前打電話訂位",
+                desc: "嘉義超人氣日料！「特上刺身」霸氣厚切且口感甘甜細緻；「生鮮生蠔」肥美爆汁，加上「鮭魚泥細卷」，大人小孩都愛吃。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=稻荷壽司嘉義"
+            },
+            {
+                id: "food_huixiang_malatang",
+                name: "回香麻辣燙",
+                tag: "獨家麻醬麻辣燙 / 冰糖雪梨",
+                day: "市區宵夜點心",
+                address: "嘉義市東區興業東路185號",
+                phone: "0910-915-885",
+                parking: "興業東路路邊臨停方便",
+                tableInfo: "外帶回飯店或車上當宵夜",
+                desc: "全嘉義獨家「椒麻湯底尬濃郁麻醬」！炸蛋吸滿醬汁超夠味，100% 純鴨血極度滑嫩，再搭配一碗解辣冰涼的「冰糖雪梨」，消夜首選。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=回香麻辣燙"
+            },
             {
                 id: "food_apo_duck",
                 name: "阿波鴨肉麵",
@@ -292,12 +414,48 @@
                 tableInfo: "內用空間大，15人容易併桌",
                 desc: "油蔥香氣濃郁，雞肉片切得厚實不乾柴，搭配綜合滷味與燙青菜，CP 值極高。",
                 googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=民主火雞肉飯"
+            },
+            {
+                id: "food_3",
+                name: "空氣圖書館 Air Library (梅山)",
+                tag: "植物系美店 / 山上聚餐",
+                day: "DAY 2 太平雲梯順遊",
+                address: "嘉義縣梅山鄉太平村下坑仔2號",
+                phone: "05-257-2366",
+                parking: "太平雲梯公共停車場",
+                tableInfo: "半開放大空間，適合 15 人大桌",
+                desc: "提供山藍野菜鍋物與素食套餐，環境充滿綠意植物，無冷氣但山風極為涼爽愜意。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=空氣圖書館"
+            },
+            {
+                id: "food_4",
+                name: "阿宏師火雞肉飯",
+                tag: "市區熱門 / 火雞肉片飯",
+                day: "DAY 3 中午",
+                address: "嘉義市東區光華路108號",
+                phone: "05-223-3467",
+                parking: "市府收費停車場",
+                tableInfo: "假日排隊人潮多，建議 11:30 前抵達",
+                desc: "火雞肉片飯淋上雞油與半熟蛋，長輩小孩都超愛，附贈紫菜湯與筍幹古早味足。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=阿宏師火雞肉飯"
+            },
+            {
+                id: "food_5",
+                name: "御香屋 (中山路總店)",
+                tag: "手搖飲天花板 / 葡萄柚綠",
+                day: "市區隨時點心",
+                address: "嘉義市東區中山路321號",
+                phone: "05-225-3828",
+                parking: "紅線切勿臨停，1人下車取餐",
+                tableInfo: "僅供外帶，建議先電話預訂",
+                desc: "紅鑽葡萄柚綠茶加上一顆梅子，酸甜清爽！高溫夏日解暑必備，長輩喝無糖烏龍也讚不絕口。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=源興御香屋"
             }
         ];
 
         let currentFood = foodsData[0];
 
-        // 景點資料集 (含景點真實照片 imageUrl)
+        // 景點資料集
         const spots = [
             // DAY 1
             {
@@ -578,7 +736,6 @@
             if (window.innerWidth < 768) switchMobileTab('list');
         }
 
-        // 渲染景點列表 (升級真實縮圖 + 天數 Accent Color)
         function renderSidebarSpots() {
             const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
             const listContainer = document.getElementById('spotList');
@@ -604,7 +761,6 @@
 
                 return `
                     <div onclick="selectSpotById('${spot.id}')" class="p-3.5 bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800/80 rounded-xl cursor-pointer transition flex space-x-3.5 items-center group ${isActive ? 'spot-card-active' : ''}">
-                        <!-- 景點真實圓角照片 -->
                         <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-slate-700/50 shadow-inner bg-slate-900">
                             <img src="${spot.imageUrl}" alt="${spot.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                         </div>
@@ -639,7 +795,6 @@
             }
         }
 
-        // 渲染景點詳情頁 (電腦版 lg:grid-cols-2 雙欄大螢幕優化 + 真實景點寫真 Banner)
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
@@ -648,15 +803,12 @@
             const seniorText = spot.seniorEval || "適合隨時休息散步";
             const kidText = spot.kidEval || "設施豐富放電體驗";
             const fullAddress = spot.address || spot.locationShort;
-            const openHoursText = spot.openHours || "請洽官方公告";
-            const phoneText = spot.phone || "無提供或現場洽詢";
 
             const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(spot.name + ' ' + fullAddress)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
             document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
 
             detailContainer.innerHTML = `
-                <!-- 高畫質景點寫真橫幅 Banner -->
                 <div class="relative h-56 md:h-72 rounded-2xl overflow-hidden mb-6 p-6 border border-slate-800 flex flex-col justify-between shadow-2xl bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.95)), url('${spot.imageUrl}');">
                     <div class="flex items-center justify-between z-10">
                         <div class="flex gap-2">
@@ -673,9 +825,7 @@
                     </div>
                 </div>
 
-                <!-- 電腦版雙欄佈局 (lg:grid-cols-2) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <!-- 左半部：體驗評語與交通指南 -->
                     <div class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-start space-x-3">
@@ -714,7 +864,6 @@
                         </div>
                     </div>
 
-                    <!-- 右半部：Google 地圖與攻略亮點 -->
                     <div class="space-y-4 flex flex-col">
                         <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl flex-1 flex flex-col">
                             <h3 class="text-sm font-bold text-slate-200 mb-2.5 flex items-center justify-between shrink-0">
@@ -728,7 +877,6 @@
                     </div>
                 </div>
 
-                <!-- 攻略亮點卡片 -->
                 <div class="bg-slate-900/60 border border-slate-800 p-5 md:p-6 rounded-2xl mb-6">
                     <h3 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-lightbulb text-amber-400 text-lg"></i> 攻略與決策亮點
@@ -868,11 +1016,22 @@
             });
         }
 
-        // 美食 Modal 動態渲染
+        // 🍱 美食 Modal 動態渲染與手機返回邏輯
         function toggleFoodModal() {
             const modal = document.getElementById('foodModal');
             modal.classList.toggle('hidden');
             modal.classList.toggle('flex');
+            if (!modal.classList.contains('hidden')) {
+                backToFoodList();
+            }
+        }
+
+        function backToFoodList() {
+            const listDom = document.getElementById('foodListContainer');
+            const detailDom = document.getElementById('foodDetailContainer');
+            listDom.classList.remove('hidden');
+            detailDom.classList.add('hidden');
+            detailDom.classList.remove('flex');
         }
 
         function selectFoodItem(foodId) {
@@ -908,6 +1067,11 @@
             const mapEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(currentFood.name + ' ' + currentFood.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
             detailContainer.innerHTML = `
+                <!-- 手機端專用：⬅ 返回美食清單按鈕 -->
+                <button onclick="backToFoodList()" class="md:hidden mb-3 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-bold rounded-lg border border-slate-700 transition flex items-center gap-1.5 w-fit">
+                    <i class="fa-solid fa-chevron-left"></i> <span>返回美食清單</span>
+                </button>
+
                 <div class="mb-4 pb-3 border-b border-slate-800 flex justify-between items-start">
                     <div>
                         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-950 text-amber-400 border border-amber-800">${currentFood.tag}</span>
@@ -941,7 +1105,7 @@
                     <p class="text-xs text-slate-300 leading-relaxed">${currentFood.desc}</p>
                 </div>
 
-                <div class="w-full h-40 rounded-xl overflow-hidden border border-slate-800 bg-slate-950 mt-auto">
+                <div class="w-full h-40 rounded-xl overflow-hidden border border-slate-800 bg-slate-950 mt-auto shrink-0">
                     <iframe class="w-full h-full border-0" loading="lazy" allowfullscreen src="${mapEmbed}"></iframe>
                 </div>
             `;
