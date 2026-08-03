@@ -171,7 +171,7 @@
                 <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
                     <i class="fa-solid fa-utensils text-amber-400"></i> 15人 4車家族美食與避坑指南
                 </h3>
-                <p class="text-xs text-slate-400 mt-1">整理沿途長輩軟食/素食、在地人氣小吃、大桌包廂餐廳與點心備案 (共 18 間)。</p>
+                <p class="text-xs text-slate-400 mt-1">整理沿途長輩軟食/素食、在地人氣小吃、大桌包廂餐廳與點心備案 (共 23 間)。</p>
             </div>
             <div class="flex-1 flex overflow-hidden border border-slate-800 rounded-xl bg-slate-950">
                 <div class="w-full md:w-5/12 border-r border-slate-800 overflow-y-auto p-3 space-y-2.5 shrink-0 bg-slate-900/40" id="foodListContainer">
@@ -241,8 +241,68 @@
     </div>
 
     <script>
-        // 18 間完整美食資料庫 (包含 one_more_food IG 最新推薦)
+        // 23 間完整美食資料庫 (含 h.ting1997 與 sh930624 私房推薦名單)
         const foodsData = [
+            {
+                id: "food_cai_datou",
+                name: "蔡大頭甕仔雞",
+                tag: "交流道旁 / 家族聚餐熱門老店",
+                day: "DAY 2/3 山線中繼/聚餐",
+                address: "嘉義縣中埔鄉頂中下街95號 (國三中埔交流道出口)",
+                phone: "05-230-6699",
+                parking: "附設專用大型停車場，4台車極好停",
+                tableInfo: "內用桌位極多，15人家族大團體聚餐極度合適 (假日建議提前訂位)",
+                desc: "國三中埔交流道下首選！必點招牌三寶：「苦茶油煎雞」（酥嫩帶茶香）、「現烤甕仔雞」（肉質嫩，雞油可煮竹筍雞湯）與「砂鍋魚頭」（沙茶湯頭清甜不油膩、白菜滾得軟爛）。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=蔡大頭甕仔雞"
+            },
+            {
+                id: "food_fenqihu_dorayaki",
+                name: "月台那間茶香銅鑼燒",
+                tag: "奮起湖私房點心 / 茶香銅鑼燒",
+                day: "阿里山/奮起湖順遊",
+                address: "嘉義縣竹崎鄉奮起湖老街 (月台邊)",
+                phone: "詳見店家IG公告",
+                parking: "請停放奮起湖第一/二收費停車場後步行進入",
+                tableInfo: "純外帶點心，買回車上或當伴手禮極佳",
+                desc: "採用台灣阿里山茶葉製作餅皮，茶香四溢！內餡高達 9 種口味，招牌「阿里山茶燒」（金萱餅皮+阿里山茶內餡，濃郁台系抹茶感）與「伯爵鹽焦糖」大人小孩都愛。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=月台那間茶香銅鑼燒"
+            },
+            {
+                id: "food_wenzai_oyster",
+                name: "塭仔烤蚵呷通海 200元",
+                tag: "東石海線 / 200元烤鮮蚵吃到飽",
+                day: "DAY 1 海線晚餐",
+                address: "嘉義縣東石鄉塭仔村塭子113-2號",
+                phone: "0979-588-985",
+                parking: "附設專用停車場，4台車好停",
+                tableInfo: "內用空間大，後方設有超大片親子遊樂區，極適合大團體",
+                desc: "$200 烤鮮蚵吃到飽（於冷氣房處理蚵仔，乾淨肥美）！熱炒表現驚豔：「鹹香蚵仔麵線」、「烏魚子炒飯」與大尾「鹽焗胡椒魚」，適合全家歡聚。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=塭仔烤蚵呷通海200元"
+            },
+            {
+                id: "food_longtai_izakaya",
+                name: "龍太居酒屋",
+                tag: "市區熱炒烤物 / 對面有停車場",
+                day: "市區晚餐/宵夜",
+                address: "嘉義市西區民生北路 (對面即有收費停車場)",
+                phone: "05-227-1888",
+                parking: "正對面即有收費停車場，4台車停放極度便利",
+                tableInfo: "設有多人桌位，適合下班後聚餐與宵夜時段",
+                desc: "市區人氣居酒屋！餐點豐富含飯麵、雞肉串燒、熱炒（九層塔炒蛤蜊、照燒雞丁）與鮮美 Q 彈的大尾烤魷魚，氣氛熱鬧。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=龍太居酒屋"
+            },
+            {
+                id: "food_suantou_ice",
+                name: "蒜頭糖廠古早味枝仔冰",
+                tag: "太保順遊 / 古早味枝仔冰",
+                day: "DAY 2/3 太保下午點心",
+                address: "嘉義縣六腳鄉工廠村1號 (蒜頭糖廠園區內)",
+                phone: "05-380-0215",
+                parking: "糖廠大型免費停車場，4台車無壓力",
+                tableInfo: "戶外涼亭與遮陽休息區多，隨買隨吃",
+                desc: "長輩與小孩最愛的傳統台式枝仔冰！牛奶、紅豆、芋頭與紅茶口味消暑便宜，搭配五分車搭乘體驗最對味。",
+                googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=蒜頭糖廠古早味枝仔冰"
+            },
             {
                 id: "food_jhulu_bbq",
                 name: "逐鹿炭火燒肉 (嘉義店)",
