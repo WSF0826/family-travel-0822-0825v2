@@ -40,13 +40,18 @@
             </div>
             <div>
                 <h1 class="font-bold text-lg md:text-xl text-slate-100 flex items-center gap-2">
-                    嘉義家族四日深度遊決策沙盒
+                    嘉義家族四日遊
                     <span class="text-xs font-normal px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">15人 4車專屬</span>
                 </h1>
                 <p class="text-sm text-slate-400 hidden md:block">2026/08/22 - 08/25 家族深度旅遊，備案一鍵切換與決策視圖</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 md:space-x-3">
+            <!-- 功能按鈕：新增【全區地圖】按鈕 -->
+            <button onclick="toggleRouteMapModal()" class="px-3 py-1.5 bg-sky-900/60 hover:bg-sky-800 text-sky-300 text-sm font-bold rounded-lg border border-sky-700 transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-map text-sky-400"></i>
+                <span class="hidden sm:inline">全區路線圖</span>
+            </button>
             <button onclick="toggleRadarModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm rounded-lg border border-slate-700 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-pie text-sky-400"></i>
                 <span class="hidden sm:inline">節奏分析</span>
@@ -63,7 +68,7 @@
         </div>
     </header>
 
-    <!-- [優化 2] 手機端顯眼導覽切換分頁標籤按鈕列 -->
+    <!-- 手機端顯眼導覽切換分頁標籤按鈕列 -->
     <div class="md:hidden bg-slate-900 border-b border-slate-800 p-2 grid grid-cols-2 gap-2 shrink-0 z-30">
         <button id="tabBtnList" onclick="switchMobileTab('list')" class="py-2.5 px-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-sky-600 text-white transition shadow-md">
             <i class="fa-solid fa-list-ul"></i>
@@ -94,7 +99,6 @@
                     <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋景點、美食、備案、地址..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-sky-500 transition">
                 </div>
             </div>
-            <!-- [優化 1] 景點卡片清單容器 (加大間距) -->
             <div id="spotList" class="flex-1 overflow-y-auto p-3 space-y-3">
             </div>
         </section>
@@ -106,12 +110,30 @@
         </section>
     </main>
 
-    <!-- [優化 3] 經典 Google Maps 藍底白字直覺導航浮動列 -->
+    <!-- 經典 Google Maps 藍底白字直覺導航浮動列 -->
     <div id="mobileNavBar" class="fixed bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-3 z-40 md:hidden hidden shadow-2xl">
         <a id="mobileMapBtn" href="#" target="_blank" class="w-full py-4 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-extrabold text-lg rounded-xl flex items-center justify-center gap-2.5 shadow-2xl active:scale-98 transition">
             <i class="fa-solid fa-location-arrow text-xl"></i>
             <span>開 Google 地圖帶路 (點我)</span>
         </a>
+    </div>
+
+    <!-- 方案 2：新增【全區每日路線圖】 Modal -->
+    <div id="routeMapModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl relative flex flex-col max-h-[90vh]">
+            <button onclick="toggleRouteMapModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-lg font-bold text-slate-100 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-map text-sky-400"></i> 4 天行程全區景點分佈地圖
+            </h3>
+            <p class="text-sm text-slate-400 mb-4">掌握 4 台車的開車路線與景點相對位置。</p>
+            <div class="w-full h-80 md:h-96 rounded-xl overflow-hidden border border-slate-800 bg-slate-950 relative">
+                <!-- 預設載入嘉義/台中總覽 Google 地圖 -->
+                <iframe id="overviewMapIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=嘉義縣&t=&z=10&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button onclick="toggleRouteMapModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded-xl">關閉地圖</button>
+            </div>
+        </div>
     </div>
 
     <!-- Radar Modal -->
@@ -177,7 +199,7 @@
         const spots = [
             // DAY 1
             { id: "spot_bear_harbor", name: "寶熊漁樂碼頭 (D1上午)", category: "DAY 1 海線", time: "2 小時", locationShort: "臺中市潭子區", address: "臺中市潭子區中山路三段11號", openHours: "10:00 – 17:30 (週二、三公休)", phone: "04-3505-6115", icon: "fa-fish", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=寶熊漁樂碼頭", seniorEval: "室內平緩、有座椅與冷氣，非常舒適", kidEval: "釣魚故事館與巨型釣魚機，放電指數高", transport: "附設專用停車場，4台車好停", weatherSuit: "晴雨皆宜（室內館）", desc: "全台唯一釣具主題觀光工廠，適合家族作為第一站室內景點。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若想切換至質感街區漫步，可轉往土庫里" },
-            { id: "spot_mitsui_outlet", name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)", category: "DAY 1 海線", time: "3-4 小時", locationShort: "臺中市梧棲區", address: "臺中市梧棲區臺灣大道十段168號", openHours: "11:00 – 21:30 (假日 10:30 開門)", phone: "04-2521-8999", icon: "fa-bag-shopping", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港", seniorEval: "美食街選擇多，有室內休息區與電梯", kidEval: "摩天輪與海景景觀，空間寬敞", transport: "大型免費停車場，15人4车無壓力", weatherSuit: "晴雨皆宜（購物中心）", desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若不想逛大型商場，可切換至文青選品小店路線" },
+            { id: "spot_mitsui_outlet", name: "MITSUI OUTLET PARK 台中港 (D1中午/下午)", category: "DAY 1 海線", time: "3-4 小時", locationShort: "臺中市梧棲區", address: "臺中市梧棲區臺灣大道十段168號", openHours: "11:00 – 21:30 (假日 10:30 開門)", phone: "04-2521-8999", icon: "fa-bag-shopping", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=MITSUI+OUTLET+PARK+台中港", seniorEval: "美食街選擇多，有室內休息區與電梯", kidEval: "摩天輪與海景景觀，空間寬敞", transport: "大型免費停車場，15人4車無壓力", weatherSuit: "晴雨皆宜（購物中心）", desc: "海線最大購物中心，方便家族大團體聚餐與自由活動。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "若不想逛大型商場，可切換至文青選品小店路線" },
             { id: "spot_gaomei_wetland", name: "高美濕地木棧道 (D1傍晚 Plan A)", category: "DAY 1 海線", time: "1.5 小時", locationShort: "臺中市清水區", address: "臺中市清水區美堤街", openHours: "09:00 – 18:00 (開放時間依潮汐時間調整)", phone: "04-2656-5810", icon: "fa-water", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=高美濕地木棧道", seniorEval: "夕陽美景絕佳，需注意海風與海風吹拂溫度", kidEval: "潮間帶觀察螃蟹與彈塗魚，自然生態豐富", transport: "周邊有收費停車場，注意強風時段駕車", weatherSuit: "僅限晴天（大風/雨天不宜）", desc: "國際級夕陽絕景，適合全家拍團體大合照。", backupId: "spot_tuku_walk", backupName: "土庫里雜貨散策", backupReason: "海邊風大或下雨時，一鍵切換至室內或質感街區" },
             // DAY 2
             { id: "spot_jourdeness_castle", name: "佐登妮絲城堡 (D2美學首選)", category: "DAY 2 美學", time: "2 - 2.5 小時", locationShort: "嘉義縣大林鎮", address: "嘉義縣大林鎮大埔美園區三路15號", openHours: "09:00 – 19:00", phone: "04-2369-6266", icon: "fa-chess-rook", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=佐登妮絲城堡", seniorEval: "巴洛克歐式建築與噴泉非常氣派，但戶外大理石折射強、遮蔽少", kidEval: "華麗穹頂與城堡廣場拍照效果好，視覺震撼", transport: "園區設有專屬大型停車場，4台車好停", weatherSuit: "室內展區有冷氣，但戶外極度曝曬", desc: "商業推銷感較重。建議傍晚 16:00 後入場避開烈日與頂光，拍人像更美。可與蓋婭莊園進行二選一。", backupId: "spot_gaia_manor", backupName: "蓋婭莊園", backupReason: "若想看同風格美學園區或避開人潮，可切換至蓋婭莊園" },
@@ -187,7 +209,7 @@
             { id: "spot_happy_hill", name: "幸福山丘 HappyHill (D2午茶選品)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉義市東區東義路566巷52-1號", openHours: "10:00 – 18:00 (週一、二公休)", phone: "05-276-5080", icon: "fa-tree", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=幸福山丘", seniorEval: "綠意山丘與貨櫃屋咖啡廳，環境自然舒適", kidEval: "大片綠草皮與特色甜點麵包，放鬆點心時間", transport: "園區入口山路狹窄且陡峭，4台車會車需特別注意", weatherSuit: "晴天戶外+室內冷氣咖啡廳", desc: "吐司與麵包非常熱門，下午 15:00 後容易完售，想吃麵包建議中午前抵達。", backupId: "spot_hoyahoyo_brunch", backupName: "hoyahoyo 早午餐", backupReason: "若山路車位停滿，可切換至忠孝路質感早午餐" },
             { id: "spot_taiping_suspension_bridge", name: "太平雲梯 & 空氣圖書館 (D2/阿里山線)", category: "DAY 2 美學", time: "2 - 3 小時", locationShort: "嘉義縣梅山鄉", address: "嘉義縣梅山鄉太平村下坑仔5號", openHours: "09:00 – 16:30 (週三公休，需預約門票)", phone: "05-257-1215", icon: "fa-bridge", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=太平雲梯", seniorEval: "雲梯景色壯麗；但雲之南道步道有上坡階梯，需評估長輩膝蓋負擔", kidEval: "高空吊橋視野極具刺激感與挑戰性", transport: "梅山 36 彎考量駕駛技術與備妥暈車藥，停車場假日需排隊", weatherSuit: "山上手腳宜穿平底鞋；午後極易起霧；空氣圖書館為半開放式無冷氣", desc: "務必排在「上午 11:00 前」抵達以避開大霧；可順遊空氣圖書館享用植物系餐點。", backupId: "spot_alishan_forest", backupName: "阿里山國家森林遊樂區", backupReason: "若想直攻高海拔巨木群，可繼續往阿里山方向前進" },
             { id: "spot_chayi_art_museum", name: "嘉義市立美術館 (D2市區美學)", category: "DAY 2 美學", time: "1.5 - 2 小時", locationShort: "嘉義市西區", address: "嘉義市西區廣寧街101號", openHours: "09:00 – 17:00 (週一公休)", phone: "05-227-0016", icon: "fa-palette", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=嘉義市立美術館", seniorEval: "新舊建築交融，館內設有電梯與空調，平緩好走", kidEval: "建築光影美感十足，庭院適合大合照", transport: "位於嘉義車站旁，周邊有收費停車場", weatherSuit: "晴雨皆宜（全館冷氣）", desc: "舊菸酒公賣局改建，市區極具代表性的藝術文化地標。", backupId: "spot_npm_south", backupName: "故宮南院 兒童創意中心", backupReason: "可切換至太保大型園區觀展與體驗" },
-            { id: "spot_hoyahoyo_brunch", name: "hoyahoyo 早午餐 (D2晨間美食)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉義市東區忠孝路357號", openHours: "08:30 – 16:00 (週三公休)", phone: "05-275-1011", icon: "fa-utensils", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=hoyahoyo+嘉義", seniorEval: "餐點精緻豐盛，環境明亮", kidEval: "特色蛋餅、漢堡與造型牛奶極具人氣", transport: "忠孝路周邊需先搜尋收費停車場", weatherSuit: "晴雨皆宜（室內用餐）", desc: "忠孝路質感早午餐，開啟嘉義市區美學之旅的起點。", backupId: "spot_happy_hill", backupName: "幸福山丘", backupReason: "若內用客滿，可切換至幸福山丘享用甜點麵包" },
+            { id: "spot_hoyahoyo_brunch", name: "hoyahoyo 早午餐 (D2晨間美食)", category: "DAY 2 美學", time: "1 - 1.5 小時", locationShort: "嘉義市東區", address: "嘉义市東區忠孝路357號", openHours: "08:30 – 16:00 (週三公休)", phone: "05-275-1011", icon: "fa-utensils", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=hoyahoyo+嘉義", seniorEval: "餐點精緻豐盛，環境明亮", kidEval: "特色蛋餅、漢堡與造型牛奶極具人氣", transport: "忠孝路周邊需先搜尋收費停車場", weatherSuit: "晴雨皆宜（室內用餐）", desc: "忠孝路質感早午餐，開啟嘉義市區美學之旅的起點。", backupId: "spot_happy_hill", backupName: "幸福山丘", backupReason: "若內用客滿，可切換至幸福山丘享用甜點麵包" },
             { id: "spot_npm_south", name: "故宮南院 & 兒童創意中心 (D2/D3親子必訪)", category: "DAY 2 美學", time: "2.5 - 3 小時", locationShort: "嘉義縣太保市", address: "嘉義縣太保市故宮大道888號", openHours: "09:00 – 17:00 (週一休館)", phone: "05-362-0777", icon: "fa-landmark", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=國立故宮博物院南部院區", seniorEval: "國家級展覽與無障礙設施，空間極為寬敞快適", kidEval: "兒童創意中心免門票！沙池、噴水區與投影互動遊戲放電滿分", transport: "園區備有大型停車場，可搭乘五分車往返蒜頭糖廠", weatherSuit: "晴雨皆宜（戶外水沙區限晴天，室內全冷氣）", desc: "結合國際級文物展覽與兒童專屬遊戲空間，傍晚戶外戲水玩沙最佳據點。", backupId: "spot_lengyan_co2", backupName: "冷研碳索館 (乾冰觀光工廠)", backupReason: "若戶外太熱或降雨，可直接切換至附近的冷研碳索館看乾冰瀑布" },
             // DAY 3
             { id: "spot_three_pigs", name: "三隻小豬觀光農場 (D3萌寵放電)", category: "DAY 3 萌寵農創", time: "2 小時", locationShort: "嘉義縣民雄鄉", address: "嘉義縣民雄鄉民新路369號", openHours: "09:00 – 18:00 (週二公休)", phone: "05-226-1008", icon: "fa-paw", googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=三隻小豬觀光農場", seniorEval: "步道平緩有座椅，但假日人潮極度擁擠、稍微嘈雜", kidEval: "放電天堂！有水豚、浣熊等動物，加上大草皮與溜滑梯", transport: "近民雄交流道，假日停車場易滿，4台車需預留尋找車位時間", weatherSuit: "戶外農場為主，注意防曬，部分區域稍微有農場氣味", desc: "建議平日上午造訪；若假日前往請先備妥門票，並預留停車尋找時間。", backupId: "spot_zhulu_love_prairie", backupName: "逐鹿傳說梅花鹿園 & 愛情大草原", backupReason: "若三隻小豬停車場爆滿，可切換至觸口大草原餵鹿" },
@@ -220,11 +242,9 @@
             initRadarChart();
         };
 
-        // 網址參數載入邏輯 (?saved=spot_id1,spot_id2)
         function initSavedSpotsFromUrlOrStorage() {
             const urlParams = new URLSearchParams(window.location.search);
             const urlSaved = urlParams.get('saved');
-            
             if (urlSaved) {
                 const ids = urlSaved.split(',').filter(id => spots.some(s => s.id === id));
                 if (ids.length > 0) {
@@ -236,7 +256,6 @@
             savedSpotIds = JSON.parse(localStorage.getItem('chiayi_saved_spots') || '[]');
         }
 
-        // [優化 2] 手機端兩欄切換按鈕控制 logic
         function switchMobileTab(targetTab) {
             const detailPanel = document.getElementById('detailPanel');
             const listPanel = document.getElementById('listPanel');
@@ -264,7 +283,6 @@
             }
         }
 
-        // 分類篩選
         function filterCategory(cat) {
             currentCategory = cat;
             document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -280,7 +298,6 @@
             if (window.innerWidth < 768) switchMobileTab('list');
         }
 
-        // 搜尋處理
         function handleSearch() {
             renderSidebarSpots();
             if (window.innerWidth < 768) switchMobileTab('list');
@@ -290,7 +307,6 @@
             return (spot.locationShort && spot.locationShort.includes('臺中')) ? 'taichung' : 'chiayi';
         }
 
-        // [優化 1] 渲染左側景點清單 (加大上下 Padding p-4.5)
         function renderSidebarSpots() {
             const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
             const listContainer = document.getElementById('spotList');
@@ -336,7 +352,6 @@
             }).join('');
         }
 
-        // 選擇景點
         function selectSpotById(id) {
             const spot = spots.find(s => s.id === id);
             if (spot) {
@@ -344,7 +359,6 @@
                 renderSidebarSpots();
                 renderDetailPanel(spot);
 
-                // 更新分頁按鈕顯示之景點名稱
                 const shortName = spot.name.length > 8 ? spot.name.substring(0, 8) + '...' : spot.name;
                 document.getElementById('tabDetailTitle').innerText = `[2. ${shortName}]`;
 
@@ -354,7 +368,7 @@
             }
         }
 
-        // 渲染詳情頁
+        // [方案 1 實現] 渲染詳情頁（含 Google 地圖嵌入 iframe）
         function renderDetailPanel(spot) {
             const detailContainer = document.getElementById('detailContent');
             const isSaved = savedSpotIds.includes(spot.id);
@@ -367,6 +381,9 @@
             const fullAddress = spot.address || spot.locationShort;
             const openHoursText = spot.openHours || "請洽官方公告";
             const phoneText = spot.phone || "無提供或現場洽詢";
+
+            // 地圖搜尋 Query URL
+            const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(spot.name + ' ' + fullAddress)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
             document.getElementById('mobileMapBtn').href = spot.googleMapsUrl;
 
@@ -449,6 +466,17 @@
                     </div>
                 </div>
 
+                <!-- [方案 1 實現] 景點即時 Google 地圖展示卡片 -->
+                <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl mb-6">
+                    <h3 class="text-sm font-bold text-slate-200 mb-2.5 flex items-center justify-between">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-map-pin text-sky-400"></i> 景點位置圖</span>
+                        <span class="text-xs font-normal text-slate-400">可雙指拖曳放大檢視</span>
+                    </h3>
+                    <div class="w-full h-56 rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
+                        <iframe class="w-full h-full border-0" loading="lazy" allowfullscreen src="${mapEmbedUrl}"></iframe>
+                    </div>
+                </div>
+
                 <div class="bg-slate-900/60 border border-slate-800 p-5 md:p-6 rounded-2xl mb-6">
                     <h3 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-lightbulb text-amber-400 text-lg"></i> 攻略與決策亮點
@@ -480,7 +508,6 @@
             `;
         }
 
-        // 收藏切換
         function toggleSaveSpot(id) {
             if (savedSpotIds.includes(id)) {
                 savedSpotIds = savedSpotIds.filter(item => item !== id);
@@ -587,6 +614,13 @@
             navigator.clipboard.writeText(lineText).then(() => {
                 alert('已成功複製家族行程摘要！可以直接貼上傳到 LINE 群組討論。');
             });
+        }
+
+        // 全區路線圖 Modal 開啟/關閉
+        function toggleRouteMapModal() {
+            const modal = document.getElementById('routeMapModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
         }
 
         function toggleRadarModal() {
